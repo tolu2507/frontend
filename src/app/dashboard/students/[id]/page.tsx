@@ -60,7 +60,7 @@ export default function StudentPage() {
           </Link>
         }
         title={`${s.firstName} ${s.lastName}`}
-        subtitle={[s.class?.name, s.admissionNo && `Adm. ${s.admissionNo}`, s.username && `App: ${s.username}`].filter(Boolean).join(' · ')}
+        subtitle={[s.class?.name, s.admissionNo && `Adm. ${s.admissionNo}`, `Tuck shop ID: ${s.shopCode}`, s.username && `App: ${s.username}`].filter(Boolean).join(' · ')}
         actions={
           <>
             <Button variant="secondary" icon={<MessageSquarePlus className="size-4" />} onClick={() => setModal('note')}>

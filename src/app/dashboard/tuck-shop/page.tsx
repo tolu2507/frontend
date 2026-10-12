@@ -1,15 +1,16 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Download, Receipt, ShoppingBasket, Undo2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { Badge, Button, Empty, ErrorBox, Input, Loading, Notice, PageHeader, Stat, Table } from '@/components/ui';
-import { api } from '@/lib/api';
+import { Badge, Button, Card, Empty, ErrorBox, Input, Loading, Notice, PageHeader, Stat, Table } from '@/components/ui';
+import { toast } from '@/components/ui/toast';
+import { api, errorText } from '@/lib/api';
 import { downloadCsv } from '@/lib/csv';
 import { naira, todayIso } from '@/lib/format';
-import { useSchoolKey } from '@/lib/queries';
+import { useOverview, useSchoolKey } from '@/lib/queries';
 
 type Sale = { id: string; studentName: string; amountKobo: string; note: string | null; createdAt: string; refunded: boolean; soldBy: string | null };
 type Sales = { totalKobo: string; count: number; items: Sale[] };
@@ -33,13 +34,14 @@ export default function TuckShopPage() {
     <>
       <PageHeader
         title="Tuck shop"
-        subtitle="Children pay from their wallet with their PIN on your counter staff’s phone. No cash, no cards."
+        subtitle="Children pay from their wallet: your staff type the child’s tuck shop ID, or the child pays from their own phone. No cash, no cards."
         actions={
           <Button variant="secondary" icon={<Download className="size-4" />} disabled={!sales.data?.items.length} onClick={exportCsv}>
             Export CSV
           </Button>
         }
       />
+      <PinSetting />
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <Input label="Day" type="date" max={todayIso()} value={day} onChange={(e) => setDay(e.target.value || todayIso())} wrapperClassName="w-48" />
       </div>
@@ -61,7 +63,7 @@ export default function TuckShopPage() {
                 title="No sales this day"
                 message={
                   <>
-                    Add your tuck-shop staff on the <Link href="/dashboard/staff" className="font-bold text-violet-600 underline">Staff</Link> page. They sign in on the Nexus phone app, pick a child, and the child types their PIN to pay.
+                    Add your tuck-shop staff on the <Link href="/dashboard/staff" className="font-bold text-violet-600 underline">Staff</Link> page. They sign in on the Nexus phone app and type each child’s tuck shop ID (it’s on the login slip and the student’s page).
                   </>
                 }
               />
@@ -96,5 +98,33 @@ export default function TuckShopPage() {
         </>
       )}
     </>
+  );
+}
+
+/** Off by default: the ID alone is enough, with the parent's daily limit as the safety net. */
+function PinSetting() {
+  const overview = useOverview();
+  const qc = useQueryClient();
+  const key = useSchoolKey();
+  const save = useMutation({
+    mutationFn: (on: boolean) => api('/school', { method: 'PATCH', body: { tuckShopRequirePin: on } }),
+    onSuccess: (_, on) => {
+      toast.success(on ? 'Children will type their PIN at the counter' : 'The tuck shop ID is enough now');
+      qc.invalidateQueries({ queryKey: [key, 'overview'] });
+    },
+    onError: (e) => toast.error(errorText(e)),
+  });
+  if (!overview.data) return null;
+  const on = overview.data.school.tuckShopRequirePin;
+  return (
+    <Card className="mb-4">
+      <label className="flex cursor-pointer items-start gap-3">
+        <input type="checkbox" className="mt-1 size-5 accent-violet-500" checked={on} disabled={save.isPending} onChange={(e) => save.mutate(e.target.checked)} />
+        <span>
+          <span className="block font-bold">Also ask for the child’s PIN at the counter</span>
+          <span className="block text-sm text-ink-500">Off: staff type the tuck shop ID and charge. On: the child also types their 4-digit PIN on the staff phone. Either way, parents set a daily spending limit (₦1,500 unless they change it) and get a notification for every purchase.</span>
+        </span>
+      </label>
+    </Card>
   );
 }

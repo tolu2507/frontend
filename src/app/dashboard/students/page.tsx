@@ -15,7 +15,7 @@ import { downloadCsv, parseCsv } from '@/lib/csv';
 import { useClasses, useOverview, useSchoolKey } from '@/lib/queries';
 import type { SchoolClass, StudentRow } from '@/lib/types';
 
-type Login = { name: string; className: string; username: string; pin: string };
+type Login = { name: string; className: string; username: string; pin: string; shopCode: string };
 
 export default function StudentsPage() {
   const key = useSchoolKey();
@@ -145,7 +145,7 @@ function AddStudent({ classes, defaultClassId, onClose, onAdded }: { classes: Sc
   });
   const add = useMutation({
     mutationFn: (v: z.infer<typeof addSchema>) =>
-      api<{ username: string; pin: string; parentInvited: boolean }>('/school/students', {
+      api<{ username: string; pin: string; shopCode: string; parentInvited: boolean }>('/school/students', {
         body: {
           firstName: v.firstName,
           lastName: v.lastName,
@@ -160,7 +160,7 @@ function AddStudent({ classes, defaultClassId, onClose, onAdded }: { classes: Sc
       toast.success(`${v.firstName} added${r.parentInvited ? '. Their parent has been emailed.' : ''}`);
       qc.invalidateQueries({ queryKey: [key] });
       onClose();
-      onAdded({ name: `${v.firstName} ${v.lastName}`, className: classes.find((c) => c.id === v.classId)?.name ?? '', username: r.username, pin: r.pin });
+      onAdded({ name: `${v.firstName} ${v.lastName}`, className: classes.find((c) => c.id === v.classId)?.name ?? '', username: r.username, pin: r.pin, shopCode: r.shopCode });
     },
     onError: (e) => toast.error(errorText(e)),
   });
@@ -227,7 +227,7 @@ function ImportStudents({ classes, onClose, onDone }: { classes: SchoolClass[]; 
   const [fileError, setFileError] = useState<string | null>(null);
   const run = useMutation({
     mutationFn: (good: Row[]) =>
-      api<{ added: number; failed: number; results: { row: number; ok: boolean; name: string; username?: string; pin?: string; error?: string }[] }>('/school/students/import', {
+      api<{ added: number; failed: number; results: { row: number; ok: boolean; name: string; username?: string; pin?: string; shopCode?: string; error?: string }[] }>('/school/students/import', {
         body: { students: good.map((r) => ({ firstName: r.firstName, lastName: r.lastName, classId: r.classId, admissionNo: r.admissionNo, dateOfBirth: r.dateOfBirth, parent: r.parent })) },
       }),
     onSuccess: (r, good) => {
@@ -235,7 +235,7 @@ function ImportStudents({ classes, onClose, onDone }: { classes: SchoolClass[]; 
       if (r.failed) toast.error(`${r.failed} couldn’t be added: ${r.results.find((x) => !x.ok)?.error}`);
       if (r.added) toast.success(`${r.added} students added`);
       onClose();
-      onDone(r.results.filter((x) => x.ok).map((x) => ({ name: x.name, className: good[x.row - 1].className, username: x.username!, pin: x.pin! })));
+      onDone(r.results.filter((x) => x.ok).map((x) => ({ name: x.name, className: good[x.row - 1].className, username: x.username!, pin: x.pin!, shopCode: x.shopCode! })));
     },
     onError: (e) => toast.error(errorText(e)),
   });
@@ -356,7 +356,7 @@ function LoginSlips({ logins, onClose }: { logins: Login[]; onClose: () => void 
       wide
       footer={
         <>
-          <Button variant="secondary" onClick={() => downloadCsv('Nexus student logins.csv', [['Student', 'Class', 'Username', 'PIN'], ...logins.map((l) => [l.name, l.className, l.username, l.pin])])}>
+          <Button variant="secondary" onClick={() => downloadCsv('Nexus student logins.csv', [['Student', 'Class', 'Username', 'PIN', 'Tuck shop ID'], ...logins.map((l) => [l.name, l.className, l.username, l.pin, l.shopCode])])}>
             Download CSV
           </Button>
           <Button icon={<Printer className="size-4" />} onClick={() => window.print()}>
@@ -380,8 +380,12 @@ function LoginSlips({ logins, onClose }: { logins: Login[]; onClose: () => void 
                 <div className="text-xs font-bold text-ink-500 uppercase">PIN</div>
                 <div className="font-mono text-base font-bold tracking-widest">{l.pin}</div>
               </div>
+              <div className="col-span-2">
+                <div className="text-xs font-bold text-ink-500 uppercase">Tuck shop ID</div>
+                <div className="font-mono text-base font-bold tracking-wider">{l.shopCode}</div>
+              </div>
             </div>
-            <p className="mt-2 text-xs text-ink-500">Open the Nexus app → “I’m a student” → enter these.</p>
+            <p className="mt-2 text-xs text-ink-500">Open the Nexus app → “I’m a student” → enter the username and PIN. At the tuck shop, give the tuck shop ID.</p>
           </Card>
         ))}
       </div>

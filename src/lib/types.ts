@@ -6,7 +6,7 @@ export type AssessmentType = 'CLASSWORK' | 'ASSIGNMENT' | 'QUIZ' | 'TEST' | 'EXA
 export type Person = { id: string; firstName: string; lastName: string };
 
 export type Overview = {
-  school: { id: string; name: string; status: string; logoUrl: string | null; brandColor: string | null; address: string | null; state: string | null; lga: string | null; email: string | null; phone: string | null };
+  school: { id: string; name: string; status: string; logoUrl: string | null; brandColor: string | null; address: string | null; state: string | null; lga: string | null; email: string | null; phone: string | null; tuckShopRequirePin: boolean };
   me: { role: 'SCHOOL_OWNER' | 'SCHOOL_ADMIN' | 'TEACHER'; isAdmin: boolean };
   year: { id: string; name: string } | null;
   term: { id: string; name: TermName; startDate: string; endDate: string } | null;
@@ -30,7 +30,7 @@ export type SchoolClass = {
   subjects: { id: string; subjectId: string; name: string; teacher: Person | null }[];
 };
 export type StaffMember = { membershipId: string; role: 'SCHOOL_OWNER' | 'SCHOOL_ADMIN' | 'TEACHER' | 'TUCK_SHOP'; status: string; id: string; firstName: string; lastName: string; email: string | null; phone: string | null; hasSignedIn: boolean };
-export type StudentRow = { id: string; firstName: string; lastName: string; admissionNo: string | null; username: string | null; className: string; classId: string; parents: { name: string; email: string | null; phone: string | null }[] };
+export type StudentRow = { id: string; firstName: string; lastName: string; admissionNo: string | null; shopCode: string; username: string | null; className: string; classId: string; parents: { name: string; email: string | null; phone: string | null }[] };
 export type StudentDetail = {
   id: string;
   firstName: string;
@@ -38,6 +38,7 @@ export type StudentDetail = {
   otherNames: string | null;
   username: string | null;
   admissionNo: string | null;
+  shopCode: string;
   level: Level;
   class: { id: string; name: string } | null;
   xp: number;
