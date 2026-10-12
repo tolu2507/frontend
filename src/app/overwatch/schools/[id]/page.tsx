@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Calculator, FileSignature, Lock } from 'lucide-react';
+import { Activity, ArrowLeft, Bot, Calculator, FileSignature, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -59,7 +59,18 @@ export default function OverwatchSchool() {
         title={s.name}
         subtitle={[s.state, s.address, s.phone].filter(Boolean).join(' · ') || undefined}
         actions={
-          s.status === 'SUSPENDED' ? (
+          <>
+            <Link href={`/overwatch/schools/${id}/ai`}>
+              <Button variant="secondary" icon={<Bot className="size-4" />}>
+                AI setup
+              </Button>
+            </Link>
+            <Link href={`/overwatch/activity?schoolId=${id}`}>
+              <Button variant="secondary" icon={<Activity className="size-4" />}>
+                Activity
+              </Button>
+            </Link>
+          {s.status === 'SUSPENDED' ? (
             <Button variant="success" loading={status.isPending} onClick={() => status.mutate('ACTIVE')}>
               Reactivate
             </Button>
@@ -67,7 +78,8 @@ export default function OverwatchSchool() {
             <Button variant="danger" loading={status.isPending} onClick={() => confirm(`Suspend ${s.name}? Their staff lose dashboard access at their next sign-in.`) && status.mutate('SUSPENDED')}>
               Suspend
             </Button>
-          )
+          )}
+          </>
         }
       />
       {s.status === 'SUSPENDED' ? <Notice tone="coral" title="Suspended">Staff can’t open this school’s dashboard. Parents and students keep their app access.</Notice> : null}

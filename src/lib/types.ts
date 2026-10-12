@@ -43,7 +43,7 @@ export type StudentDetail = {
   class: { id: string; name: string } | null;
   xp: number;
   streak: number;
-  parents: { id: string; firstName: string; lastName: string; email: string | null; phone: string | null; relationship: string; hasSignedIn: boolean }[];
+  parents: { id: string; firstName: string; lastName: string; email: string | null; phone: string | null; relationship: string; hasSignedIn: boolean; status: 'ACTIVE' | 'INVITED' | 'AWAITING_PARENT' }[];
   attendance: { present: number; late: number; absent: number; excused: number };
   results: { id: string; subject: string; title: string; type: AssessmentType; score: number; maxScore: number; heldOn: string }[];
   notes: { id: string; category: string; body: string; visibleToParent: boolean; createdAt: string; author: string }[];

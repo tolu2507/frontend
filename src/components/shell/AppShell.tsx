@@ -98,7 +98,7 @@ export function AppShell({ nav, roles, label, children, accent = 'bg-violet-500'
         </div>
       )}
 
-      <nav className="flex flex-1 flex-col gap-1" aria-label="Main">
+      <nav className="-mx-1 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-1" aria-label="Main">
         {nav.map((item) => {
           const active = isActive(item);
           return (

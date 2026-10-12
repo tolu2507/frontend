@@ -2,13 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Eye, EyeOff, KeyRound, MessageSquarePlus, Pencil, Sparkles, Trash2, UserPlus } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, KeyRound, MessageSquarePlus, Pencil, Send, Sparkles, Trash2, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { ParentCodeBox, type ParentNotice } from '@/components/school/ParentCode';
 import { Avatar, Badge, Button, Card, ErrorBox, Input, Loading, Modal, Notice, PageHeader, Select, Textarea } from '@/components/ui';
 import { toast } from '@/components/ui/toast';
 import { api, errorText } from '@/lib/api';
@@ -26,6 +27,7 @@ export default function StudentPage() {
   const q = useQuery({ queryKey: [key, 'student', id], queryFn: () => api<StudentDetail>(`/school/students/${id}`) });
   const [modal, setModal] = useState<'note' | 'parent' | 'edit' | null>(null);
   const [pin, setPin] = useState<{ username: string; pin: string } | null>(null);
+  const [notice, setNotice] = useState<{ parentName: string; notice: ParentNotice } | null>(null);
   const qc = useQueryClient();
   const admin = overview.data?.me.isAdmin;
 
@@ -37,6 +39,11 @@ export default function StudentPage() {
   const delNote = useMutation({
     mutationFn: (noteId: string) => api(`/school/notes/${noteId}`, { method: 'DELETE' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: [key, 'student', id] }),
+    onError: (e) => toast.error(errorText(e)),
+  });
+  const resend = useMutation({
+    mutationFn: (p: { id: string; name: string }) => api<ParentNotice>(`/school/students/${id}/parents/${p.id}/invite`, { body: {} }),
+    onSuccess: (n, p) => setNotice({ parentName: p.name, notice: n }),
     onError: (e) => toast.error(errorText(e)),
   });
   const unlink = useMutation({
@@ -185,7 +192,25 @@ export default function StudentPage() {
                         {p.firstName} {p.lastName} <span className="text-xs font-semibold text-ink-500">· {p.relationship.toLowerCase()}</span>
                       </div>
                       <div className="truncate text-sm text-ink-500">{p.email ?? p.phone}</div>
-                      <Badge tone={p.hasSignedIn ? 'mint' : 'sun'}>{p.hasSignedIn ? 'Uses the app' : 'Hasn’t signed in yet'}</Badge>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        {p.status === 'AWAITING_PARENT' ? (
+                          <Badge tone="sky">Waiting for them to accept</Badge>
+                        ) : p.status === 'INVITED' ? (
+                          <Badge tone="sun">Hasn’t set up the app yet</Badge>
+                        ) : (
+                          <Badge tone="mint">{p.hasSignedIn ? 'Uses the app' : 'Has an account'}</Badge>
+                        )}
+                        {admin && p.status !== 'ACTIVE' ? (
+                          <button
+                            type="button"
+                            onClick={() => resend.mutate({ id: p.id, name: p.firstName })}
+                            disabled={resend.isPending}
+                            className="inline-flex items-center gap-1 rounded-lg px-1.5 py-0.5 text-xs font-bold text-violet-700 hover:bg-violet-50 disabled:opacity-50"
+                          >
+                            <Send className="size-3" /> {p.status === 'INVITED' ? 'New code' : 'Remind'}
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
                     {admin ? (
                       <button type="button" onClick={() => confirm(`Unlink ${p.firstName}? They’ll stop seeing ${s.firstName}.`) && unlink.mutate(p.id)} className="grid size-8 place-items-center rounded-lg text-ink-300 hover:bg-coral-50 hover:text-coral-700" aria-label={`Unlink ${p.firstName}`}>
@@ -235,7 +260,12 @@ export default function StudentPage() {
       </div>
 
       {modal === 'note' ? <NoteForm studentId={id} name={s.firstName} onClose={() => setModal(null)} /> : null}
-      {modal === 'parent' ? <ParentForm studentId={id} name={s.firstName} onClose={() => setModal(null)} /> : null}
+      {modal === 'parent' ? <ParentForm studentId={id} name={s.firstName} onClose={() => setModal(null)} onLinked={setNotice} /> : null}
+      {notice ? (
+        <Modal open onClose={() => setNotice(null)} title={`${notice.parentName} and ${s.firstName}`} footer={<Button onClick={() => setNotice(null)}>Done</Button>}>
+          <ParentCodeBox notice={notice.notice} parentName={notice.parentName} childName={s.firstName} />
+        </Modal>
+      ) : null}
       {modal === 'edit' ? <EditStudent student={s} onClose={() => setModal(null)} /> : null}
       {pin ? (
         <Modal open onClose={() => setPin(null)} title={`New app PIN for ${s.firstName}`} footer={<Button onClick={() => setPin(null)}>Done</Button>}>
@@ -327,16 +357,16 @@ const parentSchema = z
   })
   .refine((v) => v.email || v.phone, { path: ['email'], message: 'Add an email or phone so they can sign in.' });
 
-function ParentForm({ studentId, name, onClose }: { studentId: string; name: string; onClose: () => void }) {
+function ParentForm({ studentId, name, onClose, onLinked }: { studentId: string; name: string; onClose: () => void; onLinked: (n: { parentName: string; notice: ParentNotice }) => void }) {
   const qc = useQueryClient();
   const key = useSchoolKey();
   const { register, handleSubmit, formState } = useForm({ resolver: zodResolver(parentSchema), defaultValues: { firstName: '', lastName: '', email: '', phone: '', relationship: 'MOTHER' as const } });
   const save = useMutation({
-    mutationFn: (v: z.infer<typeof parentSchema>) => api<{ invited: boolean }>(`/school/students/${studentId}/parents`, { body: { ...v, email: v.email || undefined, phone: v.phone.replace(/\s/g, '') || undefined } }),
-    onSuccess: (r) => {
-      toast.success(r.invited ? 'Parent added and emailed a sign-in code' : 'Parent linked. They’ll see the child in their app.');
+    mutationFn: (v: z.infer<typeof parentSchema>) => api<ParentNotice>(`/school/students/${studentId}/parents`, { body: { ...v, email: v.email || undefined, phone: v.phone.replace(/\s/g, '') || undefined } }),
+    onSuccess: (r, v) => {
       qc.invalidateQueries({ queryKey: [key] });
       onClose();
+      onLinked({ parentName: v.firstName, notice: r });
     },
     onError: (e) => toast.error(errorText(e)),
   });

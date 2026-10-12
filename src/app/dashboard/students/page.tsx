@@ -8,6 +8,7 @@ import { useDeferredValue, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { ParentCodeBox, type ParentNotice } from '@/components/school/ParentCode';
 import { Avatar, Badge, Button, Card, Empty, ErrorBox, Input, Loading, Modal, Notice, PageHeader, Select, Table } from '@/components/ui';
 import { toast } from '@/components/ui/toast';
 import { api, errorText } from '@/lib/api';
@@ -15,7 +16,7 @@ import { downloadCsv, parseCsv } from '@/lib/csv';
 import { useClasses, useOverview, useSchoolKey } from '@/lib/queries';
 import type { SchoolClass, StudentRow } from '@/lib/types';
 
-type Login = { name: string; className: string; username: string; pin: string; shopCode: string };
+type Login = { name: string; className: string; username: string; pin: string; shopCode: string; parentName?: string; parent?: ParentNotice | null };
 
 export default function StudentsPage() {
   const key = useSchoolKey();
@@ -145,7 +146,7 @@ function AddStudent({ classes, defaultClassId, onClose, onAdded }: { classes: Sc
   });
   const add = useMutation({
     mutationFn: (v: z.infer<typeof addSchema>) =>
-      api<{ username: string; pin: string; shopCode: string; parentInvited: boolean }>('/school/students', {
+      api<{ username: string; pin: string; shopCode: string; parentInvited: boolean; parent: ParentNotice | null }>('/school/students', {
         body: {
           firstName: v.firstName,
           lastName: v.lastName,
@@ -157,10 +158,10 @@ function AddStudent({ classes, defaultClassId, onClose, onAdded }: { classes: Sc
         },
       }),
     onSuccess: (r, v) => {
-      toast.success(`${v.firstName} added${r.parentInvited ? '. Their parent has been emailed.' : ''}`);
+      toast.success(`${v.firstName} added`);
       qc.invalidateQueries({ queryKey: [key] });
       onClose();
-      onAdded({ name: `${v.firstName} ${v.lastName}`, className: classes.find((c) => c.id === v.classId)?.name ?? '', username: r.username, pin: r.pin, shopCode: r.shopCode });
+      onAdded({ name: `${v.firstName} ${v.lastName}`, className: classes.find((c) => c.id === v.classId)?.name ?? '', username: r.username, pin: r.pin, shopCode: r.shopCode, parentName: v.pFirst ? `${v.pFirst} ${v.pLast}`.trim() : undefined, parent: r.parent });
     },
     onError: (e) => toast.error(errorText(e)),
   });
@@ -194,7 +195,7 @@ function AddStudent({ classes, defaultClassId, onClose, onAdded }: { classes: Sc
         </div>
         <div role="group" className="grid gap-4 rounded-2xl bg-paper p-4 sm:grid-cols-2">
           <h3 className="text-sm font-extrabold sm:col-span-2">Parent or guardian</h3>
-          <p className="text-sm text-ink-500 sm:col-span-2">They get the Nexus app with weekly reports and fee payments. If they already have an account, the child is added to it.</p>
+          <p className="text-sm text-ink-500 sm:col-span-2">They get the Nexus app with weekly reports and fee payments. If they already have a Nexus account, they’ll be asked to accept the child in their app first.</p>
           <Input label="First name" error={e.pFirst?.message} {...register('pFirst')} />
           <Input label="Surname" {...register('pLast')} />
           <Input label="Email" type="email" error={e.pEmail?.message} {...register('pEmail')} />
@@ -227,7 +228,7 @@ function ImportStudents({ classes, onClose, onDone }: { classes: SchoolClass[]; 
   const [fileError, setFileError] = useState<string | null>(null);
   const run = useMutation({
     mutationFn: (good: Row[]) =>
-      api<{ added: number; failed: number; results: { row: number; ok: boolean; name: string; username?: string; pin?: string; shopCode?: string; error?: string }[] }>('/school/students/import', {
+      api<{ added: number; failed: number; results: { row: number; ok: boolean; name: string; username?: string; pin?: string; shopCode?: string; parent?: ParentNotice | null; error?: string }[] }>('/school/students/import', {
         body: { students: good.map((r) => ({ firstName: r.firstName, lastName: r.lastName, classId: r.classId, admissionNo: r.admissionNo, dateOfBirth: r.dateOfBirth, parent: r.parent })) },
       }),
     onSuccess: (r, good) => {
@@ -235,7 +236,7 @@ function ImportStudents({ classes, onClose, onDone }: { classes: SchoolClass[]; 
       if (r.failed) toast.error(`${r.failed} couldn’t be added: ${r.results.find((x) => !x.ok)?.error}`);
       if (r.added) toast.success(`${r.added} students added`);
       onClose();
-      onDone(r.results.filter((x) => x.ok).map((x) => ({ name: x.name, className: good[x.row - 1].className, username: x.username!, pin: x.pin!, shopCode: x.shopCode! })));
+      onDone(r.results.filter((x) => x.ok).map((x) => ({ name: x.name, className: good[x.row - 1].className, username: x.username!, pin: x.pin!, shopCode: x.shopCode!, parentName: good[x.row - 1].parent ? `${good[x.row - 1].parent!.firstName} ${good[x.row - 1].parent!.lastName}` : undefined, parent: x.parent })));
     },
     onError: (e) => toast.error(errorText(e)),
   });
@@ -356,7 +357,7 @@ function LoginSlips({ logins, onClose }: { logins: Login[]; onClose: () => void 
       wide
       footer={
         <>
-          <Button variant="secondary" onClick={() => downloadCsv('Nexus student logins.csv', [['Student', 'Class', 'Username', 'PIN', 'Tuck shop ID'], ...logins.map((l) => [l.name, l.className, l.username, l.pin, l.shopCode])])}>
+          <Button variant="secondary" onClick={() => downloadCsv('Nexus student logins.csv', [['Student', 'Class', 'Username', 'PIN', 'Tuck shop ID', 'Parent', 'Parent signs in with', 'Parent app code'], ...logins.map((l) => [l.name, l.className, l.username, l.pin, l.shopCode, l.parentName ?? '', l.parent?.signInWith ?? '', l.parent?.code ?? (l.parent?.status === 'AWAITING_PARENT' ? 'Has an account: accepts in app' : l.parent?.sent ? 'Sent' : '')])])}>
             Download CSV
           </Button>
           <Button icon={<Printer className="size-4" />} onClick={() => window.print()}>
@@ -365,7 +366,7 @@ function LoginSlips({ logins, onClose }: { logins: Login[]; onClose: () => void 
         </>
       }
     >
-      <Notice tone="sun">Save or print these now: PINs aren’t shown again. Parents can change the PIN in their app, and you can reset it from the student’s page.</Notice>
+      <Notice tone="sun">Save or print these now: PINs and parent codes aren’t shown again (you can send a parent a new code from the student’s page). Parents can change the PIN in their app, and you can reset it from the student’s page.</Notice>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {logins.map((l) => (
           <Card key={l.username} className="border-2 border-dashed break-inside-avoid">
@@ -386,6 +387,11 @@ function LoginSlips({ logins, onClose }: { logins: Login[]; onClose: () => void 
               </div>
             </div>
             <p className="mt-2 text-xs text-ink-500">Open the Nexus app → “I’m a student” → enter the username and PIN. At the tuck shop, give the tuck shop ID.</p>
+            {l.parent ? (
+              <div className="mt-3">
+                <ParentCodeBox notice={l.parent} parentName={l.parentName} childName={l.name.split(' ')[0]} compact />
+              </div>
+            ) : null}
           </Card>
         ))}
       </div>
