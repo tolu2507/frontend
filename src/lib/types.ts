@@ -29,7 +29,7 @@ export type SchoolClass = {
   studentCount: number;
   subjects: { id: string; subjectId: string; name: string; teacher: Person | null }[];
 };
-export type StaffMember = { membershipId: string; role: 'SCHOOL_OWNER' | 'SCHOOL_ADMIN' | 'TEACHER'; status: string; id: string; firstName: string; lastName: string; email: string | null; phone: string | null; hasSignedIn: boolean };
+export type StaffMember = { membershipId: string; role: 'SCHOOL_OWNER' | 'SCHOOL_ADMIN' | 'TEACHER' | 'TUCK_SHOP'; status: string; id: string; firstName: string; lastName: string; email: string | null; phone: string | null; hasSignedIn: boolean };
 export type StudentRow = { id: string; firstName: string; lastName: string; admissionNo: string | null; username: string | null; className: string; classId: string; parents: { name: string; email: string | null; phone: string | null }[] };
 export type StudentDetail = {
   id: string;

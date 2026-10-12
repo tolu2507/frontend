@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, ReceiptText, School, Settings, Sparkles, Users, UsersRound } from 'lucide-react';
+import { LayoutDashboard, ReceiptText, School, Settings, ShoppingBasket, Sparkles, Users, UsersRound } from 'lucide-react';
 
 import { AppShell, type NavItem } from '@/components/shell/AppShell';
 import { useAuth } from '@/lib/auth';
@@ -15,6 +15,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: '/dashboard/students', label: 'Students', icon: Users },
     ...(admin ? [{ href: '/dashboard/staff', label: 'Staff', icon: UsersRound }] : []),
     ...(admin ? [{ href: '/dashboard/fees', label: 'Fees', icon: ReceiptText }] : []),
+    ...(admin ? [{ href: '/dashboard/tuck-shop', label: 'Tuck shop', icon: ShoppingBasket }] : []),
     { href: '/dashboard/reports', label: 'Parent reports', icon: Sparkles },
     ...(admin ? [{ href: '/dashboard/settings', label: 'Settings', icon: Settings }] : []),
   ];

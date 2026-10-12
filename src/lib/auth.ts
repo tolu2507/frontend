@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-export type Role = 'PLATFORM_ADMIN' | 'SCHOOL_OWNER' | 'SCHOOL_ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT' | 'TUTOR';
+export type Role = 'PLATFORM_ADMIN' | 'SCHOOL_OWNER' | 'SCHOOL_ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT' | 'TUTOR' | 'TUCK_SHOP';
 export type Membership = { id: string; role: Role; schoolId: string | null; schoolName: string | null };
 export type SessionUser = { id: string; firstName: string; lastName: string; email: string | null; phone: string | null; memberships: Membership[] };
 export type Session = { accessToken: string; refreshToken: string; user: SessionUser };
