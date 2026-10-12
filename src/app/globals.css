@@ -1,0 +1,83 @@
+@import 'tailwindcss';
+
+/* Same palette as the mobile app (mobile/src/theme/tokens.js) and the landing page. */
+@theme {
+  --font-display: var(--font-bricolage), 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-sans: var(--font-figtree), 'Figtree', system-ui, sans-serif;
+
+  --color-violet-50: #f4f2ff;
+  --color-violet-100: #e4deff;
+  --color-violet-200: #b9a9ff;
+  --color-violet-400: #6c4bff;
+  --color-violet-500: #5b3df5;
+  --color-violet-700: #4426c9;
+  --color-sun-50: #fff6da;
+  --color-sun-100: #fff1cc;
+  --color-sun-400: #ffc53d;
+  --color-sun-600: #d49a00;
+  --color-sun-800: #7a5200;
+  --color-mint-50: #e2f5ef;
+  --color-mint-100: #d3f5ea;
+  --color-mint-400: #19c39c;
+  --color-mint-600: #0e8f7a;
+  --color-mint-700: #0b6e5e;
+  --color-mint-800: #0b5a4c;
+  --color-coral-50: #fff5f1;
+  --color-coral-100: #ffe1d9;
+  --color-coral-400: #ff6b4a;
+  --color-coral-500: #e2552f;
+  --color-coral-700: #a3330f;
+  --color-sky-100: #eaf2ff;
+  --color-sky-400: #2fa8ff;
+  --color-sky-600: #1d6fe0;
+  --color-sky-800: #1a4fa0;
+  --color-ink: #17133a;
+  --color-ink-900: #0e0b26;
+  --color-ink-700: #3a3660;
+  --color-ink-500: #5a5680;
+  --color-ink-300: #8a85b0;
+  --color-ink-200: #e2def5;
+  --color-ink-100: #eeebfb;
+  --color-paper: #f5f4fb;
+
+  --shadow-card: 0 1px 2px rgba(23, 19, 58, 0.05), 0 8px 24px -12px rgba(23, 19, 58, 0.14);
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-rise: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-violet-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
