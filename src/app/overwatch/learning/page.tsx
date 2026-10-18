@@ -1,7 +1,7 @@
 'use client';
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BarChart3, BookOpenCheck, Check, Flame, GraduationCap, Pencil, Plus, Sparkles, Target, Trash2, Trophy, Wand2 } from 'lucide-react';
+import { BarChart3, BookOpenCheck, Flame, GraduationCap, Pencil, Plus, Sparkles, Target, Trash2, Trophy, Wand2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { BarList, ChartCard, ColumnChart, compact, Meter, TrendChart } from '@/components/overwatch/charts';
@@ -78,12 +78,11 @@ function LearningDashboard({ d, days }: { d: Learning; days: number }) {
   const participation = t.students ? Math.round((t.activeLearners / t.students) * 100) : 0;
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Kpi label="Students learning" value={t.activeLearners.toLocaleString()} hint={`${participation}% of ${t.students.toLocaleString()} students`} icon={<GraduationCap className="size-5" />} />
         <Kpi label="Quests finished" tone="sky" value={t.attempts.toLocaleString()} hint={t.activeLearners ? `${(t.attempts / t.activeLearners).toFixed(1)} per learner` : undefined} icon={<BookOpenCheck className="size-5" />} />
         <Kpi label="Average score" tone={t.avgScore === null ? 'ink' : t.avgScore >= 70 ? 'mint' : t.avgScore >= 50 ? 'sun' : 'coral'} value={t.avgScore === null ? '—' : `${t.avgScore}%`} icon={<Target className="size-5" />} />
         <Kpi label="XP earned" tone="sun" value={compact(t.xp)} icon={<Sparkles className="size-5" />} />
-        <Kpi label="Lesson quizzes done" tone="mint" value={t.lessonQuizzes.toLocaleString()} hint="after tutor lessons" icon={<Check className="size-5" />} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -147,7 +146,7 @@ function LearningDashboard({ d, days }: { d: Learning; days: number }) {
         <ChartCard title="Top learners" subtitle={`Most XP in the last ${days} days`}>
           <People rows={d.topStudents} right={(s) => <span className="font-display font-bold">{s.xp.toLocaleString()} XP</span>} empty="No XP earned yet." icon={<Trophy className="size-4 text-sun-600" />} />
         </ChartCard>
-        <ChartCard title="Students who need help" subtitle="Averaging under 50% over 3 or more quests. Worth telling the school or suggesting a tutor.">
+        <ChartCard title="Students who need help" subtitle="Averaging under 50% over 3 or more quests. Worth telling their parent or school.">
           <People rows={d.struggling} right={(s) => <Badge tone="coral">{s.avgScore}% · {s.attempts} quests</Badge>} empty="Nobody is struggling right now." />
         </ChartCard>
       </div>

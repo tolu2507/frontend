@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity, ArrowLeftRight, Bot, Building2, GraduationCap, Inbox, LayoutDashboard, LibraryBig, Scale, Users, Wallet } from 'lucide-react';
+import { Activity, ArrowLeftRight, Bot, Building2, Inbox, LayoutDashboard, LibraryBig, Users, Wallet } from 'lucide-react';
 
 import { AppShell, type NavItem } from '@/components/shell/AppShell';
 
@@ -14,8 +14,6 @@ const nav: NavItem[] = [
   { href: '/overwatch/wallets', label: 'Wallets', icon: Wallet },
   { href: '/overwatch/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/overwatch/enquiries', label: 'Demo requests', icon: Inbox },
-  { href: '/overwatch/tutors', label: 'Tutor applications', icon: GraduationCap },
-  { href: '/overwatch/disputes', label: 'Lesson disputes', icon: Scale },
 ];
 
 /** Overwatch: the platform owner's area. Only PLATFORM_ADMIN accounts get in. */

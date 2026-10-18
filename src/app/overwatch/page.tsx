@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Banknote, Bot, Building2, GraduationCap, Inbox, Scale, Sparkles, UserPlus, Users } from 'lucide-react';
+import { Banknote, Bot, Building2, GraduationCap, Inbox, Sparkles, UserPlus, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -14,13 +14,13 @@ import { naira } from '@/lib/format';
 type K = { value: number; previous: number; changePct: number | null };
 type Analytics = {
   days: number;
-  totals: { schools: Record<string, number>; students: number; parents: number; staff: number; tutors: { verified: number; total: number } };
+  totals: { schools: Record<string, number>; students: number; parents: number; staff: number };
   kpis: { paymentsKobo: K; platformRevenueKobo: K; aiCostKobo: K; activeLearners: K; signups: K };
   series: { day: string; signups: number; paymentsKobo: number; payments: number; attempts: number; learners: number; avgScore: number | null; aiCostKobo: number; aiCalls: number; events: number }[];
   paymentsByPurpose: { purpose: string; count: number; amountKobo: number }[];
   topSchools: { id: string; name: string; status: string; students: number; paymentsKobo: number }[];
 };
-type Overview = { todo: { enquiries: number; tutorsToReview: number; disputes: number } };
+type Overview = { todo: { enquiries: number } };
 
 export default function OverwatchHome() {
   const [days, setDays] = useState(30);
@@ -30,8 +30,6 @@ export default function OverwatchHome() {
   const tasks = todo.data
     ? [
         { n: todo.data.todo.enquiries, label: 'demo requests to follow up', href: '/overwatch/enquiries', icon: Inbox },
-        { n: todo.data.todo.tutorsToReview, label: 'tutors waiting for review', href: '/overwatch/tutors', icon: GraduationCap },
-        { n: todo.data.todo.disputes, label: 'lesson disputes to resolve', href: '/overwatch/disputes', icon: Scale },
       ]
     : [];
 
@@ -71,7 +69,7 @@ function Dashboard({ d }: { d: Analytics }) {
   const t = d.totals;
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Kpi label="Money collected" value={naira(d.kpis.paymentsKobo.value)} changePct={d.kpis.paymentsKobo.changePct} hint={vs} icon={<Banknote className="size-5" />} />
         <Kpi label="Nexus revenue" tone="mint" value={naira(d.kpis.platformRevenueKobo.value)} changePct={d.kpis.platformRevenueKobo.changePct} hint="platform fees" icon={<Sparkles className="size-5" />} />
         <Kpi label="Active learners" tone="sky" value={d.kpis.activeLearners.value.toLocaleString()} changePct={d.kpis.activeLearners.changePct} hint={`of ${t.students.toLocaleString()} students`} icon={<GraduationCap className="size-5" />} />
@@ -86,7 +84,7 @@ function Dashboard({ d }: { d: Analytics }) {
         <ChartCard title="Learning activity" subtitle="Quests finished and students learning, per day">
           <TrendChart data={d.series} series={[{ key: 'attempts', label: 'Quests finished' }, { key: 'learners', label: 'Students learning' }]} format={compact} empty="No quests finished yet" />
         </ChartCard>
-        <ChartCard title="New accounts" subtitle="Parents, students, staff and tutors who joined">
+        <ChartCard title="New accounts" subtitle="Parents, students and staff who joined">
           <TrendChart data={d.series} series={[{ key: 'signups', label: 'New accounts', color: '#d49a00' }]} format={compact} empty="No sign-ups in this period" />
         </ChartCard>
         <ChartCard title="Platform activity" subtitle="Sign-ins and changes made across every school" action={<Link href="/overwatch/activity" className="text-sm font-bold text-violet-700 hover:underline">Activity log</Link>}>
@@ -128,7 +126,6 @@ function Dashboard({ d }: { d: Analytics }) {
           { label: 'Students', value: t.students, href: '/overwatch/people?kind=STUDENT', icon: GraduationCap },
           { label: 'Parents', value: t.parents, href: '/overwatch/people?kind=PARENT', icon: Users },
           { label: 'Teachers & staff', value: t.staff, href: '/overwatch/people?kind=STAFF', icon: Users },
-          { label: 'Tutors', value: t.tutors.total, hint: `${t.tutors.verified} verified`, href: '/overwatch/people?kind=TUTOR', icon: GraduationCap },
         ].map((x) => (
           <Link key={x.label} href={x.href}>
             <Card className="flex items-center gap-3 transition hover:-translate-y-0.5">
