@@ -21,6 +21,7 @@ const STATUS: Record<Status, { label: string; tone: Tone }> = {
   RETIRED: { label: 'Retired', tone: 'coral' },
 };
 const DIFFICULTY = ['', 'Very easy', 'Easy', 'Medium', 'Hard', 'Very hard'];
+const ORIGIN: Record<string, string> = { TEMPLATE: 'Template (answer worked out by code)', GENERATED: 'Written by AI, checked by AI', AUTHORED: 'Written by the Nexus team' };
 const PAGE = 20;
 
 type Counts = Record<Status, number>;
@@ -49,6 +50,7 @@ type Question = {
   timesServed: number;
   timesCorrect: number;
   reports: { id: string; reason: string; note: string | null; createdAt: string }[];
+  template: { id: string; key: string | null; status: Status; questions: number } | null;
   createdAt: string;
 };
 type Page = { total: number; page: number; pageSize: number; items: Question[] };
@@ -57,7 +59,7 @@ const sum = (c: Counts) => c.DRAFT + c.IN_REVIEW + c.APPROVED + c.RETIRED;
 
 export default function QuestionBankPage() {
   const qc = useQueryClient();
-  const [f, setF] = useState({ exam: '', subjectId: '', topicId: '', status: 'IN_REVIEW', difficulty: '', reported: '', q: '' });
+  const [f, setF] = useState({ exam: '', subjectId: '', topicId: '', status: 'IN_REVIEW', origin: '', difficulty: '', reported: '', q: '' });
   const [page, setPage] = useState(1);
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [editing, setEditing] = useState<Question | null>(null);
@@ -81,6 +83,14 @@ export default function QuestionBankPage() {
     onSuccess: (r, v) => {
       toast.success(`${r.updated} ${r.updated === 1 ? 'question' : 'questions'} ${v.status === 'APPROVED' ? 'now live for students' : v.status === 'RETIRED' ? 'retired' : 'sent back to review'}.`);
       setPicked(new Set());
+      refresh();
+    },
+    onError: (e) => toast.error(errorText(e)),
+  });
+  const templateStatus = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: Status }) => api<{ updated: number }>(`/admin/question-bank/templates/${id}/status`, { method: 'POST', body: { status } }),
+    onSuccess: (r, v) => {
+      toast.success(`Template ${v.status === 'APPROVED' ? 'approved' : v.status === 'RETIRED' ? 'retired' : 'sent back to review'}: ${r.updated} questions updated. Future questions from it follow automatically.`);
       refresh();
     },
     onError: (e) => toast.error(errorText(e)),
@@ -158,6 +168,7 @@ export default function QuestionBankPage() {
           />
         ) : null}
         <FilterSelect label="Status" value={f.status} onChange={set('status')} options={[{ value: '', label: 'Any status' }, ...(Object.keys(STATUS) as Status[]).map((s) => ({ value: s, label: STATUS[s].label }))]} />
+        <FilterSelect label="Source" value={f.origin} onChange={set('origin')} options={[{ value: '', label: 'Any source' }, { value: 'TEMPLATE', label: 'Templates' }, { value: 'GENERATED', label: 'AI written' }, { value: 'AUTHORED', label: 'Nexus team' }]} />
         <FilterSelect label="Difficulty" value={f.difficulty} onChange={set('difficulty')} options={[{ value: '', label: 'Any difficulty' }, ...[1, 2, 3, 4, 5].map((d) => ({ value: String(d), label: `${d} · ${DIFFICULTY[d]}` }))]} />
         <FilterSelect label="Reports" value={f.reported} onChange={set('reported')} options={[{ value: '', label: 'Reported or not' }, { value: 'true', label: 'Reported only' }]} />
         <SearchBox value={f.q} onChange={set('q')} placeholder="Search question text" />
@@ -205,6 +216,7 @@ export default function QuestionBankPage() {
                 onEdit={() => setEditing(q)}
                 onStatus={(status) => setStatus.mutate({ ids: [q.id], status })}
                 onDismiss={(id) => dismiss.mutate(id)}
+                onTemplate={(id, status) => templateStatus.mutate({ id, status })}
               />
             ))}
           </ol>
@@ -216,7 +228,7 @@ export default function QuestionBankPage() {
   );
 }
 
-function QuestionCard({ q, picked, onPick, onEdit, onStatus, onDismiss }: { q: Question; picked: boolean; onPick: () => void; onEdit: () => void; onStatus: (s: Status) => void; onDismiss: (reportId: string) => void }) {
+function QuestionCard({ q, picked, onPick, onEdit, onStatus, onDismiss, onTemplate }: { q: Question; picked: boolean; onPick: () => void; onEdit: () => void; onStatus: (s: Status) => void; onDismiss: (reportId: string) => void; onTemplate: (id: string, s: Status) => void }) {
   const [open, setOpen] = useState(false);
   const rate = q.timesServed ? Math.round((q.timesCorrect / q.timesServed) * 100) : null;
   return (
@@ -235,7 +247,7 @@ function QuestionCard({ q, picked, onPick, onEdit, onStatus, onDismiss }: { q: Q
               Difficulty {q.difficulty} ({DIFFICULTY[q.difficulty]})
             </span>
             <span className="text-ink-300">·</span>
-            <span className="text-ink-500">{label(q.origin)}</span>
+            <span className="text-ink-500">{ORIGIN[q.origin] ?? label(q.origin)}</span>
             {q.reports.length ? (
               <Badge tone="coral">
                 <Flag className="size-3" /> {q.reports.length} {q.reports.length === 1 ? 'report' : 'reports'}
@@ -259,6 +271,25 @@ function QuestionCard({ q, picked, onPick, onEdit, onStatus, onDismiss }: { q: Q
             <div className="mt-2 rounded-xl bg-paper p-3 text-sm leading-relaxed">
               <MathText text={q.explanation} />
               {q.checkNotes ? <p className="mt-2 text-xs text-ink-500">Automatic check: {q.checkNotes}</p> : null}
+            </div>
+          ) : null}
+          {q.template ? (
+            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-sky-100/60 p-3 text-sm">
+              <span className="mr-auto text-sky-800">
+                One of <b>{q.template.questions}</b> questions from the template <code className="rounded bg-white px-1 text-xs">{q.template.key}</code>. The numbers change each time; the answer is always worked out by code. Check a few, then decide for all of them.
+              </span>
+              {q.template.status !== 'APPROVED' ? (
+                <Button size="sm" onClick={() => onTemplate(q.template!.id, 'APPROVED')} icon={<CheckCheck className="size-4" />}>
+                  Approve all {q.template.questions}
+                </Button>
+              ) : (
+                <Badge tone="mint">Template approved</Badge>
+              )}
+              {q.template.status !== 'RETIRED' ? (
+                <Button size="sm" variant="ghost" onClick={() => confirm(`Retire the whole template? Its ${q.template!.questions} questions stop being used.`) && onTemplate(q.template!.id, 'RETIRED')}>
+                  Retire template
+                </Button>
+              ) : null}
             </div>
           ) : null}
           {q.reports.map((r) => (
