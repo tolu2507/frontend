@@ -35,7 +35,8 @@ export function MathText({ text, className }: { text: string; className?: string
             {p.text.split('\n').map((line, j) => (
               <Fragment key={j}>
                 {j > 0 ? <br /> : null}
-                {line}
+                {/* *word* is how English questions mark the word being tested */}
+                {line.split(/(?<![*\w])\*([^*\n]+)\*(?![*\w])/).map((bit, k) => (k % 2 ? <em key={k}>{bit}</em> : bit))}
               </Fragment>
             ))}
           </Fragment>
