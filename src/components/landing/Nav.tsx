@@ -41,11 +41,11 @@ export function Nav() {
           ))}
         </nav>
         <div className="lp-nav-actions">
-          <a href={brand.appUrl} className="lp-nav-login">
+          <Link href="/login" className="lp-nav-login">
             Log in
-          </a>
-          <a href={brand.appUrl} className="lp-btn sm">
-            Open the app
+          </Link>
+          <a href="#get-app" className="lp-btn sm">
+            Get the app
           </a>
           <button
             type="button"
@@ -66,8 +66,11 @@ export function Nav() {
           </a>
         ))}
         <a href={brand.appUrl} onClick={() => setOpen(false)}>
-          Log in
+          Use on the web
         </a>
+        <Link href="/login" onClick={() => setOpen(false)}>
+          Log in
+        </Link>
       </nav>
     </header>
   );

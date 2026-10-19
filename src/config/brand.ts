@@ -5,4 +5,7 @@ export const brand = {
   apiUrl: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001',
   /** The web version of the mobile app (Expo web), for parents and children without the Android app. */
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:8081',
+  /** Store listings; leave unset until the app is live there and the button shows "Coming soon". */
+  playStoreUrl: process.env.NEXT_PUBLIC_PLAY_STORE_URL || null,
+  appStoreUrl: process.env.NEXT_PUBLIC_APP_STORE_URL || null,
 } as const;

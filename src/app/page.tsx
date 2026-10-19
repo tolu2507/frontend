@@ -1,5 +1,4 @@
 import {
-  ArrowRight,
   BookOpenCheck,
   CalendarCheck,
   Check,
@@ -26,6 +25,7 @@ import {
 } from 'lucide-react';
 
 import { DemoForm } from '@/components/landing/DemoForm';
+import { GetApp } from '@/components/landing/GetApp';
 import { Logo } from '@/components/landing/Logo';
 import { Nav } from '@/components/landing/Nav';
 import { RevealObserver } from '@/components/landing/RevealObserver';
@@ -82,17 +82,10 @@ function Hero() {
             {N} gives your child fun daily practice for their class and their exams, a mock exam every Friday, and gives you a
             clear report on how they’re doing every week. Their school doesn’t need to sign up.
           </p>
-          <div className="lp-hero-ctas">
-            <a href={APP} className="lp-btn">
-              Open the app <ArrowRight size={20} className="arrow" />
-            </a>
-            <a href="#how" className="lp-btn ghost">
-              See how it works
-            </a>
-          </div>
+          <GetApp />
           <ul className="lp-checks">
             <li>
-              <Check size={18} strokeWidth={3} /> Works in your browser, nothing to install
+              <Check size={18} strokeWidth={3} /> On Android, iPhone or any browser
             </li>
             <li>
               <Check size={18} strokeWidth={3} /> All your children on one account
@@ -550,7 +543,7 @@ function DeepDives() {
 
 function HowItWorks() {
   const steps = [
-    { color: '#5B3DF5', icon: UserPlus, title: 'Create your account', body: 'Sign up as a parent in the app or in your browser. It takes a minute.' },
+    { color: '#5B3DF5', icon: UserPlus, title: 'Create your account', body: 'Get the app (or use it in your browser) and sign up as a parent. It takes a minute.' },
     { color: '#19C39C', icon: Users, title: 'Add your children', body: 'Pick each child’s class. They get their own username and a 4-digit PIN to sign in.' },
     { color: '#FF6B4A', icon: CalendarCheck, title: 'They practise, you see it', body: 'Short rounds every day, a mock on Friday, and your report every week.' },
   ];
@@ -582,10 +575,8 @@ function HowItWorks() {
             );
           })}
         </div>
-        <div className="lp-hero-ctas" style={{ justifyContent: 'center', marginTop: 40 }} data-reveal>
-          <a href={APP} className="lp-btn">
-            Open the app <ArrowRight size={20} className="arrow" />
-          </a>
+        <div id="get-app" data-reveal style={{ scrollMarginTop: 120 }}>
+          <GetApp center />
         </div>
       </div>
     </section>
@@ -637,8 +628,8 @@ function Faq() {
       a: 'No. You sign up yourself and add your children. If their school joins later, your reports can include school results and attendance too.',
     },
     {
-      q: 'Do we need to download anything?',
-      a: `No. ${N} works in the browser on any phone, tablet or laptop. Just open the app link and sign in.`,
+      q: 'Do we need to download an app?',
+      a: `Get ${N} from Google Play or the App Store, or skip the download and use it in the browser on any phone, tablet or laptop.`,
     },
     {
       q: 'Which exams and classes do you cover?',
@@ -731,13 +722,13 @@ function Footer() {
             <p>Exam prep, daily practice and weekly progress reports for Nigerian families.</p>
           </div>
           <nav className="lp-footer-links" aria-label="Footer">
-            <a href={APP}>Open the app</a>
+            <a href={APP}>Use {N} on the web</a>
             <a href="#exam-prep">Exam prep</a>
             <a href="#little-learners">Nursery and primary</a>
             <a href="#reports">Weekly reports</a>
             <a href="#faq">FAQ</a>
             <a href="#schools">For schools</a>
-            <a href="/login">School and staff log in</a>
+            <a href="/login">Log in</a>
           </nav>
         </div>
         <div className="lp-footer-base">
