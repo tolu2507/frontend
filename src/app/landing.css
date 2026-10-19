@@ -674,7 +674,7 @@
   animation-delay: 1s, 1.6s;
 }
 
-.lp-chip.tutor {
+.lp-chip.mock {
   left: 40px;
   bottom: 18px;
   animation-delay: 1.25s, 0s;
@@ -1061,15 +1061,15 @@
   animation: lp-float 4s ease-in-out infinite;
 }
 
-/* Tutor mock */
-.lp-mock-tutor {
+/* Stacked cards mock */
+.lp-mock-stack {
   position: relative;
   width: min(370px, 100%);
   display: grid;
   gap: 14px;
 }
 
-.lp-tutor-card {
+.lp-stack-card {
   background: var(--white);
   border-radius: 24px;
   padding: 20px;
@@ -1792,7 +1792,7 @@
     left: 0;
     top: 300px;
   }
-  .lp-chip.tutor {
+  .lp-chip.mock {
     left: 0;
     bottom: 0;
   }
@@ -1834,3 +1834,123 @@
     transform: rotate(360deg);
   }
 }
+
+/* ── Topic map mock (exam prep) ───────────────────────── */
+
+.lp-path {
+  display: grid;
+  gap: 0;
+}
+
+.lp-path-node {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  position: relative;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lp-path-node + .lp-path-node::before {
+  content: '';
+  position: absolute;
+  left: 18.5px;
+  top: -10px;
+  height: 20px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--violet-100);
+}
+
+.lp-path-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 99px;
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-weight: 800;
+  color: var(--white);
+  background: var(--violet-500);
+  position: relative;
+  z-index: 1;
+}
+
+.lp-path-dot.done {
+  background: var(--sun-400);
+  color: var(--ink);
+}
+
+.lp-path-dot.locked {
+  background: var(--ink-100);
+  color: var(--ink-300);
+}
+
+.lp-path-node small {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-500);
+}
+
+/* ── Picture tiles mock (nursery and primary) ─────────── */
+
+.lp-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.lp-tile-pic {
+  aspect-ratio: 1;
+  border-radius: 22px;
+  background: var(--white);
+  border: 3px solid var(--ink-200);
+  border-bottom-width: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 44px;
+  line-height: 1;
+  position: relative;
+}
+
+.lp-tile-pic.right {
+  border-color: var(--mint-400);
+  background: var(--mint-50);
+}
+
+.lp-tile-pic .tick {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 99px;
+  display: grid;
+  place-items: center;
+  background: var(--mint-400);
+  color: var(--white);
+}
+
+.lp-say {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 19px;
+}
+
+.lp-say i {
+  width: 42px;
+  height: 42px;
+  border-radius: 99px;
+  display: grid;
+  place-items: center;
+  background: var(--coral-500);
+  color: var(--white);
+  flex: none;
+}
+

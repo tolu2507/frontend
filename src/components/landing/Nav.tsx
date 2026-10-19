@@ -4,14 +4,16 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { brand } from '@/config/brand';
+
 import { Logo } from './Logo';
 
 const links = [
-  { href: '#features', label: 'Features' },
-  { href: '#reports', label: 'Parent reports' },
-  { href: '#learning', label: 'Student app' },
-  { href: '#tutors', label: 'Lesson teachers' },
+  { href: '#exam-prep', label: 'Exam prep' },
+  { href: '#little-learners', label: 'Nursery and primary' },
+  { href: '#reports', label: 'Weekly reports' },
   { href: '#faq', label: 'FAQ' },
+  { href: '#schools', label: 'For schools' },
 ];
 
 export function Nav() {
@@ -39,11 +41,11 @@ export function Nav() {
           ))}
         </nav>
         <div className="lp-nav-actions">
-          <Link href="/login" className="lp-nav-login">
+          <a href={brand.appUrl} className="lp-nav-login">
             Log in
-          </Link>
-          <a href="#demo" className="lp-btn sm">
-            Book a demo
+          </a>
+          <a href={brand.appUrl} className="lp-btn sm">
+            Open the app
           </a>
           <button
             type="button"
@@ -63,9 +65,9 @@ export function Nav() {
             {l.label}
           </a>
         ))}
-        <Link href="/login" onClick={() => setOpen(false)}>
+        <a href={brand.appUrl} onClick={() => setOpen(false)}>
           Log in
-        </Link>
+        </a>
       </nav>
     </header>
   );

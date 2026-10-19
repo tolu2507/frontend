@@ -17,9 +17,9 @@ const body = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: `${brand.name} · School management, weekly parent reports and gamified learning`,
+  title: `${brand.name} · Exam prep and daily practice for your child, from Nursery to JAMB`,
   description:
-    "Manage students, results and fees in one place. Every parent gets a weekly AI progress report and every student gets a learning game they love.",
+    "Fun daily practice for your child's class and exams (Common Entrance, BECE, WAEC, NECO, JAMB), a mock exam every Friday, and a clear progress report for you every week.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

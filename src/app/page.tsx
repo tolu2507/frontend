@@ -1,29 +1,28 @@
 import {
   ArrowRight,
-  BadgeCheck,
   BookOpenCheck,
   CalendarCheck,
   Check,
-  ClipboardList,
+  Crown,
   Eye,
-  FileSpreadsheet,
   Flame,
   GraduationCap,
-  HandCoins,
   HeartHandshake,
   Lock,
   Mail,
   MessageCircle,
   Plus,
-  ReceiptText,
+  RefreshCcw,
   School,
   ShieldCheck,
-  ShoppingBasket,
   Smartphone,
   Sparkles,
   Star,
+  Timer,
   Trophy,
+  UserPlus,
   Users,
+  Volume2,
 } from 'lucide-react';
 
 import { DemoForm } from '@/components/landing/DemoForm';
@@ -35,6 +34,7 @@ import { brand } from '@/config/brand';
 import './landing.css';
 
 const N = brand.name;
+const APP = brand.appUrl;
 
 export default function LandingPage() {
   return (
@@ -45,11 +45,10 @@ export default function LandingPage() {
         <Pains />
         <Features />
         <DeepDives />
-        <People />
         <HowItWorks />
         <Trust />
         <Faq />
-        <Demo />
+        <Schools />
       </main>
       <Footer />
       <RevealObserver />
@@ -68,38 +67,38 @@ function Hero() {
             <span className="lp-eyebrow-dot">
               <Sparkles size={13} />
             </span>
-            Built for Nigerian nursery, primary and secondary schools
+            For Nigerian parents · Nursery 1 to SS3
           </span>
           <h1>
-            The school system that keeps parents{' '}
+            Help your child pass, from Nursery to{' '}
             <span className="lp-hl">
-              coming back
+              JAMB
               <svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true">
                 <path d="M4 14 C 80 4, 200 4, 296 12" fill="none" stroke="#FFC53D" strokeWidth="9" strokeLinecap="round" />
               </svg>
             </span>
           </h1>
           <p className="lp-hero-sub">
-            {N} runs your students, results and fees in one place. Then it turns that data into a weekly progress report for every
-            parent, and a learning game every student wants to play.
+            {N} gives your child fun daily practice for their class and their exams, a mock exam every Friday, and gives you a
+            clear report on how they’re doing every week. Their school doesn’t need to sign up.
           </p>
           <div className="lp-hero-ctas">
-            <a href="#demo" className="lp-btn">
-              Book a free demo <ArrowRight size={20} className="arrow" />
+            <a href={APP} className="lp-btn">
+              Open the app <ArrowRight size={20} className="arrow" />
             </a>
-            <a href="#features" className="lp-btn ghost">
-              See what’s inside
+            <a href="#how" className="lp-btn ghost">
+              See how it works
             </a>
           </div>
           <ul className="lp-checks">
             <li>
-              <Check size={18} strokeWidth={3} /> No setup fee
+              <Check size={18} strokeWidth={3} /> Works in your browser, nothing to install
             </li>
             <li>
-              <Check size={18} strokeWidth={3} /> Works on any smartphone
+              <Check size={18} strokeWidth={3} /> All your children on one account
             </li>
             <li>
-              <Check size={18} strokeWidth={3} /> We import your records for you
+              <Check size={18} strokeWidth={3} /> A question they’ve never seen, every time
             </li>
           </ul>
         </div>
@@ -110,31 +109,31 @@ function Hero() {
 }
 
 function HeroStage() {
-  const bars = [62, 78, 54, 88, 70, 94];
+  const bars = [35, 52, 48, 70, 64, 88];
   return (
-    <div className="lp-stage" aria-label={`Preview of the ${N} school dashboard and parent app`} role="img">
+    <div className="lp-stage" aria-label={`Preview of the ${N} student practice and the parent’s weekly report`} role="img">
       <div className="lp-dash">
         <div className="lp-dash-top">
           <div>
-            <div className="lp-dash-title">This term</div>
-            <div className="lp-dash-sub">Greenfield Academy · 2nd term</div>
+            <div className="lp-dash-title">Tunde’s JAMB prep</div>
+            <div className="lp-dash-sub">English, Maths, Physics, Chemistry</div>
           </div>
           <span className="lp-pill">
-            <span style={{ width: 7, height: 7, borderRadius: 9, background: '#19C39C' }} /> Live
+            <Flame size={12} color="#E2552F" /> 12 days in a row
           </span>
         </div>
         <div className="lp-kpis">
           <div className="lp-kpi violet">
-            <b>486</b>
-            <span>Students</span>
+            <b>18</b>
+            <span>Topics conquered</span>
           </div>
           <div className="lp-kpi mint">
-            <b>96%</b>
-            <span>Attendance</span>
+            <b>74%</b>
+            <span>Friday mock</span>
           </div>
           <div className="lp-kpi sun">
-            <b>82%</b>
-            <span>Fees paid</span>
+            <b>1,240</b>
+            <span>XP this week</span>
           </div>
         </div>
         <div className="lp-bars">
@@ -143,7 +142,7 @@ function HeroStage() {
           ))}
         </div>
         <div className="lp-bar-labels">
-          {['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4', 'Wk 5', 'Wk 6'].map((w) => (
+          {['Mock 1', 'Mock 2', 'Mock 3', 'Mock 4', 'Mock 5', 'Mock 6'].map((w) => (
             <span key={w}>{w}</span>
           ))}
         </div>
@@ -158,14 +157,14 @@ function HeroStage() {
             </span>
             <div>
               <div className="lp-report-name">Ada’s week</div>
-              <div className="lp-report-meta">JSS 2 · Friday report</div>
+              <div className="lp-report-meta">Primary 4 · Friday report</div>
             </div>
           </div>
           <div className="lp-report-card">
             <div className="lp-ai-tag">
               <Sparkles size={12} /> Weekly summary
             </div>
-            <p>Ada was present all 5 days and scored 84% in her Maths test. Spelling is improving; try 10 minutes of reading tonight.</p>
+            <p>Ada practised on 5 days and conquered Fractions. Word problems still trip her up; ask her to read each one aloud first.</p>
           </div>
           <div className="lp-report-card">
             {[
@@ -190,29 +189,29 @@ function HeroStage() {
 
       <div className="lp-chip xp">
         <span className="lp-chip-icon" style={{ background: '#FFF1CC', color: '#D49A00' }}>
-          <Flame size={20} />
+          <Crown size={20} />
         </span>
         <span>
-          +40 XP · 12-day streak
-          <small>Tunde finished a Maths quest</small>
+          Boss round beaten!
+          <small>Quadratic equations · +100 XP</small>
         </span>
       </div>
-      <div className="lp-chip tutor">
+      <div className="lp-chip mock">
         <span className="lp-chip-icon" style={{ background: '#E4DEFF', color: '#5B3DF5' }}>
-          <BadgeCheck size={20} />
+          <Timer size={20} />
         </span>
         <span>
-          {N} approved tutor
-          <small>Physics · SS2 · 4.9 rating</small>
+          Friday mock is open
+          <small>Timed, just like the real CBT</small>
         </span>
       </div>
       <div className="lp-chip fee">
-        <span className="lp-chip-icon" style={{ background: '#E2F5EF', color: '#0E8F7A' }}>
-          <ReceiptText size={20} />
+        <span className="lp-chip-icon" style={{ background: '#FFE1D9', color: '#E2552F' }}>
+          <Volume2 size={20} />
         </span>
         <span>
-          School fees paid
-          <small>₦185,000 · receipt sent</small>
+          “Find the letter B”
+          <small>Nursery games that talk</small>
         </span>
       </div>
     </div>
@@ -224,16 +223,16 @@ function HeroStage() {
 function Pains() {
   const items = [
     {
-      q: '“How is my child doing?” only gets answered on report day.',
-      a: `${N} sends every parent a clear progress report every Friday, written for them.`,
+      q: '“How is my child really doing?” only gets answered on report-card day.',
+      a: `${N} sends you a short, clear report every week: what they practised, what they’ve mastered and what to help with.`,
     },
     {
-      q: 'Collecting fees means chasing parents, receipts and spreadsheets.',
-      a: 'Send invoices from your dashboard. Parents pay online and you see who’s paid straight away.',
+      q: 'The exam is coming and you can’t tell what they’ve covered.',
+      a: 'Every subject is a map of the topics the exam actually tests, climbed from easy to hard, with a mock every Friday.',
     },
     {
-      q: 'Students forget half of what they learnt over the holidays.',
-      a: 'Short learning quests with XP, streaks and leagues keep them practising at home.',
+      q: 'They’d rather be on the phone than reading.',
+      a: 'Good. Now the phone is where they practise, with points, streaks, badges and weekly leagues.',
     },
   ];
   return (
@@ -260,23 +259,23 @@ function Features() {
     {
       tone: 'violet',
       wide: true,
-      icon: Users,
-      title: 'Students, classes and staff',
-      body: 'Enrol students, set up classes, subjects and terms, and link every child to their parents. Bring your current records over from Excel.',
+      icon: GraduationCap,
+      title: 'Exam prep for every big exam',
+      body: 'Common Entrance, BECE, WAEC, NECO and JAMB. Your child picks their subjects (for JAMB, English plus three) and practises topic by topic.',
     },
     {
       tone: 'mint',
       wide: true,
-      icon: CalendarCheck,
-      title: 'Attendance and results',
-      body: 'Teachers mark attendance in seconds and record CA, test and exam scores from their phone or laptop.',
+      icon: BookOpenCheck,
+      title: 'Class practice from Nursery 1',
+      body: 'Not writing an exam yet? Younger children practise what their own class is learning, from counting and letters in nursery to fractions in Primary 5.',
     },
-    { tone: 'sun', icon: HandCoins, title: 'Fees and payments', body: 'Send fee invoices, take card or transfer payments, and track what’s outstanding.' },
-    { tone: 'sky', icon: Sparkles, title: 'AI parent reports', body: 'A weekly report for every child, built from attendance, scores and teacher notes.' },
-    { tone: 'coral', icon: Trophy, title: 'Gamified learning', body: 'Quests, XP, streaks, badges and weekly leagues, for both primary and secondary.' },
-    { tone: 'paper', icon: ShoppingBasket, title: 'Cashless tuck shop', body: 'Parents top up a spending wallet and see exactly what their child bought.' },
-    { tone: 'violet', icon: GraduationCap, title: 'Exam preparation', body: 'Practice for Common Entrance, BECE, WAEC, NECO and JAMB inside the student app.' },
-    { tone: 'mint', icon: BadgeCheck, title: 'Approved lesson teachers', body: 'Parents can book home or online lessons with vetted, rated tutors.' },
+    { tone: 'sun', icon: Timer, title: 'A mock every Friday', body: 'A timed practice exam that looks and feels like the real CBT, with results the same day.' },
+    { tone: 'sky', icon: Sparkles, title: 'Your weekly report', body: 'What they did, what improved and one thing to help with at home. In the app, by email or on WhatsApp.' },
+    { tone: 'coral', icon: RefreshCcw, title: 'Never the same question', body: 'A huge bank of original questions, so every round is new and wrong answers come back later to fix.' },
+    { tone: 'paper', icon: Trophy, title: 'Rewards that keep them going', body: 'XP, daily streaks, badges, and weekly leagues against other students.' },
+    { tone: 'violet', icon: Volume2, title: 'Nursery games that talk', body: 'Little ones hear every question read aloud and tap big pictures. No reading needed.' },
+    { tone: 'mint', icon: Users, title: 'All your children, one account', body: 'Add each child with their own login and PIN, then see all of them from your dashboard.' },
   ] as const;
   return (
     <section id="features" className="lp-section">
@@ -284,14 +283,12 @@ function Features() {
         <div className="lp-section-head center" data-reveal>
           <span className="lp-eyebrow">
             <span className="lp-eyebrow-dot">
-              <School size={13} />
+              <Star size={13} />
             </span>
-            One platform
+            What your child gets
           </span>
-          <h2 className="lp-h2">Everything your school runs on, in one place</h2>
-          <p className="lp-lead">
-            A dashboard for your office, an app for parents, students and teachers, all working from the same records.
-          </p>
+          <h2 className="lp-h2">A study partner for every stage of school</h2>
+          <p className="lp-lead">One app for the whole family: practice for your children, and a clear picture of their progress for you.</p>
         </div>
         <div className="lp-bento">
           {tiles.map((t, i) => {
@@ -331,34 +328,165 @@ function DeepDives() {
   return (
     <section className="lp-section" style={{ paddingTop: 0 }}>
       <div className="lp-wrap">
+        {/* Exam prep */}
+        <div id="exam-prep" className="lp-feature">
+          <div className="lp-feature-copy" data-reveal>
+            <span className="lp-tag" style={{ background: '#E4DEFF', color: '#4426C9' }}>
+              Exam prep
+            </span>
+            <h2 className="lp-h2">Practise what the exam actually asks</h2>
+            <p className="lp-lead">
+              We studied years of past papers to learn which topics come up and how often. Your child climbs each topic level by level,
+              then beats a boss round to conquer it.
+            </p>
+            <ul className="lp-list">
+              <li>
+                <ListIcon color="#5B3DF5" />
+                <span>
+                  <b>Most-tested topics first,</b> so their time goes where the marks are.
+                </span>
+              </li>
+              <li>
+                <ListIcon color="#5B3DF5" />
+                <span>
+                  <b>Worked answers</b> after every round, so a wrong answer becomes a lesson.
+                </span>
+              </li>
+              <li>
+                <ListIcon color="#5B3DF5" />
+                <span>
+                  <b>A Friday mock</b> that feels like exam day, so the real one doesn’t scare them.
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div className="lp-feature-art" style={{ background: 'linear-gradient(150deg, #E4DEFF, #FFF1CC)' }} data-reveal>
+            <div className="lp-mock-game">
+              <div className="lp-game-card">
+                <div className="lp-mock-row" style={{ marginBottom: 10 }}>
+                  <b style={{ fontFamily: 'var(--display)', fontSize: 18 }}>Algebra</b>
+                  <span className="lp-pill">
+                    <Flame size={12} color="#E2552F" /> In every paper
+                  </span>
+                </div>
+                <div className="lp-path">
+                  {[
+                    { name: 'Simplifying expressions', meta: 'Conquered', state: 'done' },
+                    { name: 'Linear equations', meta: 'Level 4 of 5', state: 'on', level: 4 },
+                    { name: 'Quadratic equations', meta: 'Level 2 of 5', state: 'on', level: 2 },
+                    { name: 'Variation', meta: 'Unlocks after level 1 above', state: 'locked' },
+                  ].map((n) => (
+                    <div key={n.name} className="lp-path-node">
+                      <span className={`lp-path-dot${n.state === 'done' ? ' done' : n.state === 'locked' ? ' locked' : ''}`}>
+                        {n.state === 'done' ? <Crown size={18} /> : n.state === 'locked' ? <Lock size={16} /> : n.level}
+                      </span>
+                      <span>
+                        {n.name}
+                        <small>{n.meta}</small>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Little learners */}
+        <div id="little-learners" className="lp-feature flip">
+          <div className="lp-feature-copy" data-reveal>
+            <span className="lp-tag" style={{ background: '#FFE1D9', color: '#A3330F' }}>
+              Nursery and primary
+            </span>
+            <h2 className="lp-h2">Learning that feels like play</h2>
+            <p className="lp-lead">
+              Younger children practise what their own class is learning. Questions start easy, get harder as they improve, and every
+              right answer gets a cheer.
+            </p>
+            <ul className="lp-list">
+              <li>
+                <ListIcon color="#E2552F" />
+                <span>
+                  <b>Nursery 1 and 2:</b> counting, letters and sounds, colours, shapes and animals, read aloud with big picture answers.
+                </span>
+              </li>
+              <li>
+                <ListIcon color="#E2552F" />
+                <span>
+                  <b>Primary 1 to 5:</b> Maths, English and Basic Science, with everyday naira and market examples.
+                </span>
+              </li>
+              <li>
+                <ListIcon color="#E2552F" />
+                <span>
+                  <b>Primary 4 upwards</b> can also start Common Entrance practice.
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div className="lp-feature-art" style={{ background: 'linear-gradient(150deg, #FFE1D9, #FFF6DA)' }} data-reveal>
+            <div className="lp-mock-stack">
+              <div className="lp-stack-card">
+                <div className="lp-say">
+                  <i>
+                    <Volume2 size={20} />
+                  </i>
+                  Which animal says “moo”?
+                </div>
+                <div className="lp-tiles">
+                  {['🐶', '🐄', '🐱', '🦆'].map((e) => (
+                    <span key={e} className={`lp-tile-pic${e === '🐄' ? ' right' : ''}`}>
+                      {e}
+                      {e === '🐄' ? (
+                        <span className="tick">
+                          <Check size={16} strokeWidth={3} />
+                        </span>
+                      ) : null}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="lp-escrow">
+                <span className="lp-chip-icon" style={{ background: '#FFF1CC', color: '#D49A00' }}>
+                  <Star size={18} />
+                </span>
+                <span>
+                  “Well done!”
+                  <small style={{ display: 'block', fontWeight: 600, color: '#5A5680', fontSize: 12 }}>Heard straight away, every right answer</small>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Reports */}
         <div id="reports" className="lp-feature">
           <div className="lp-feature-copy" data-reveal>
             <span className="lp-tag" style={{ background: '#E2F5EF', color: '#0B5A4C' }}>
-              Weekly parent reports
+              For you
             </span>
-            <h2 className="lp-h2">Every parent gets a report. Every Friday.</h2>
+            <h2 className="lp-h2">Know how they’re doing. Every week.</h2>
             <p className="lp-lead">
-              {N} writes a short, personal progress report for each child from what your teachers already record. Parents finally
-              know what’s happening, and your teachers don’t write a single extra line.
+              You don’t have to sit beside them to know. Each week {N} sums up your child’s practice in plain words, with one practical
+              thing you can do at home.
             </p>
             <ul className="lp-list">
               <li>
                 <ListIcon color="#0E8F7A" />
                 <span>
-                  <b>Built from real data:</b> attendance, test scores and teacher notes.
+                  <b>Built from what they really did:</b> practice, scores, streaks and Friday mocks.
                 </span>
               </li>
               <li>
                 <ListIcon color="#0E8F7A" />
                 <span>
-                  <b>Delivered where parents are:</b> the app, email and WhatsApp.
+                  <b>Delivered where you are:</b> the app, email, or WhatsApp if you choose.
                 </span>
               </li>
               <li>
                 <ListIcon color="#0E8F7A" />
                 <span>
-                  <b>Practical next steps:</b> what to practise at home this week.
+                  <b>Every child at a glance:</b> tap a child for their subjects, topics and mock results.
                 </span>
               </li>
             </ul>
@@ -372,7 +500,7 @@ function DeepDives() {
                   </span>
                   <div>
                     <div className="lp-report-name">Chidi Eze</div>
-                    <div className="lp-report-meta">Primary 4 · Week 6</div>
+                    <div className="lp-report-meta">JSS 3 · BECE prep · Week 6</div>
                   </div>
                 </div>
                 <span className="lp-pill">
@@ -381,16 +509,16 @@ function DeepDives() {
               </div>
               <div className="lp-stat-row">
                 <div className="lp-stat">
-                  <b>5/5</b>
-                  <span>Days present</span>
+                  <b>5/7</b>
+                  <span>Days practised</span>
                 </div>
                 <div className="lp-stat">
                   <b>78%</b>
-                  <span>Avg. score</span>
+                  <span>Friday mock</span>
                 </div>
                 <div className="lp-stat">
                   <b>+12%</b>
-                  <span>vs last week</span>
+                  <span>vs last mock</span>
                 </div>
               </div>
               <div className="lp-report-card" style={{ background: '#F5F4FB', margin: 0 }}>
@@ -413,211 +541,6 @@ function DeepDives() {
             </div>
           </div>
         </div>
-
-        {/* Learning */}
-        <div id="learning" className="lp-feature flip">
-          <div className="lp-feature-copy" data-reveal>
-            <span className="lp-tag" style={{ background: '#E4DEFF', color: '#4426C9' }}>
-              Student app
-            </span>
-            <h2 className="lp-h2">Homework they actually want to do</h2>
-            <p className="lp-lead">
-              Short learning quests matched to each child’s class and subjects. Students earn XP, keep streaks alive and climb
-              weekly leagues with their classmates.
-            </p>
-            <ul className="lp-list">
-              <li>
-                <ListIcon color="#5B3DF5" />
-                <span>
-                  <b>Two worlds:</b> a bright, playful app for primary and a focused exam-prep app for secondary.
-                </span>
-              </li>
-              <li>
-                <ListIcon color="#5B3DF5" />
-                <span>
-                  <b>Bronze to Diamond leagues</b> that reset every week, so everyone has a fresh chance.
-                </span>
-              </li>
-              <li>
-                <ListIcon color="#5B3DF5" />
-                <span>
-                  <b>Teachers see who’s practising</b> and which topics the class is stuck on.
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="lp-feature-art" style={{ background: 'linear-gradient(150deg, #E4DEFF, #FFF1CC)' }} data-reveal>
-            <div className="lp-mock-game">
-              <span className="lp-xp-float">+25 XP</span>
-              <div className="lp-game-card">
-                <div className="lp-xp">
-                  <svg className="lp-ring" viewBox="0 0 86 86" aria-hidden="true">
-                    <circle cx="43" cy="43" r="36" fill="none" stroke="#EEEBFB" strokeWidth="10" />
-                    <circle className="progress" cx="43" cy="43" r="36" fill="none" stroke="#5B3DF5" strokeWidth="10" strokeLinecap="round" />
-                  </svg>
-                  <div>
-                    <div className="lp-report-meta">Level 7 · 740 / 1000 XP</div>
-                    <div className="lp-xp-level">Maths explorer</div>
-                    <span className="lp-streak">
-                      <Flame size={14} /> 12-day streak
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="lp-game-card">
-                <div className="lp-mock-row" style={{ marginBottom: 8 }}>
-                  <b style={{ fontFamily: 'var(--display)' }}>Gold league</b>
-                  <span className="lp-report-meta">Ends Sunday</span>
-                </div>
-                {[
-                  ['1', 'Temi A.', '1,240', '#FF6B4A', false],
-                  ['2', 'You', '1,180', '#5B3DF5', true],
-                  ['3', 'Musa B.', '990', '#19C39C', false],
-                ].map(([rank, name, xp, color, me]) => (
-                  <div key={rank as string} className={`lp-league-row${me ? ' me' : ''}`}>
-                    <span className="rank">{rank}</span>
-                    <span className="lp-avatar" style={{ width: 34, height: 34, borderRadius: 11, fontSize: 13, background: color as string }}>
-                      {(name as string)[0]}
-                    </span>
-                    <span>{name}</span>
-                    <span>{xp} XP</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tutors */}
-        <div id="tutors" className="lp-feature">
-          <div className="lp-feature-copy" data-reveal>
-            <span className="lp-tag" style={{ background: '#FFE1D9', color: '#A3330F' }}>
-              Lesson teachers
-            </span>
-            <h2 className="lp-h2">Extra lessons parents can trust</h2>
-            <p className="lp-lead">
-              When a child needs extra help, parents can book a lesson teacher in the app. Every tutor is checked by {N} before a
-              parent ever sees them.
-            </p>
-            <ul className="lp-list">
-              <li>
-                <ListIcon color="#E2552F" />
-                <span>
-                  <b>Three-step vetting:</b> ID and documents, a subject test, then an interview.
-                </span>
-              </li>
-              <li>
-                <ListIcon color="#E2552F" />
-                <span>
-                  <b>Payment held safely</b> until the lesson has happened.
-                </span>
-              </li>
-              <li>
-                <ListIcon color="#E2552F" />
-                <span>
-                  <b>Matched to the report:</b> parents see suggestions for the subjects their child finds hardest.
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="lp-feature-art" style={{ background: 'linear-gradient(150deg, #FFE1D9, #FFF6DA)' }} data-reveal>
-            <div className="lp-mock-tutor">
-              <div className="lp-tutor-card">
-                <div className="lp-report-head" style={{ margin: 0 }}>
-                  <span className="lp-avatar" style={{ background: '#E2552F', width: 48, height: 48, borderRadius: 16 }}>
-                    FO
-                  </span>
-                  <div>
-                    <div className="lp-report-name">Mrs Funmi O.</div>
-                    <div className="lp-report-meta">Mathematics · Further Maths</div>
-                    <span className="lp-approved" style={{ marginTop: 4 }}>
-                      <BadgeCheck size={13} /> {N} approved
-                    </span>
-                  </div>
-                </div>
-                <div className="lp-steps-mini">
-                  {['ID and documents checked', 'Passed Maths subject test', 'Interviewed by our team'].map((s) => (
-                    <div key={s} className="lp-step-mini">
-                      <i>
-                        <Check size={14} strokeWidth={3} />
-                      </i>
-                      {s}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="lp-escrow">
-                <span className="lp-chip-icon" style={{ background: '#E2F5EF', color: '#0E8F7A' }}>
-                  <Lock size={18} />
-                </span>
-                <span>
-                  ₦12,000 held safely
-                  <small style={{ display: 'block', fontWeight: 600, color: '#5A5680', fontSize: 12 }}>
-                    Released after Saturday’s lesson
-                  </small>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── Who it's for ─────────────────────────────────────── */
-
-function People() {
-  const people = [
-    {
-      icon: School,
-      tone: '#5B3DF5',
-      bg: '#F4F2FF',
-      title: 'Proprietors and principals',
-      body: 'See attendance, results and fee collection across the whole school at a glance.',
-    },
-    {
-      icon: ClipboardList,
-      tone: '#1D6FE0',
-      bg: '#EAF2FF',
-      title: 'Teachers',
-      body: 'Mark attendance, enter scores and leave quick notes. The weekly report writes itself.',
-    },
-    {
-      icon: HeartHandshake,
-      tone: '#0E8F7A',
-      bg: '#E2F5EF',
-      title: 'Parents',
-      body: 'Weekly reports, fee payments, tuck shop top-ups and trusted tutors in one app.',
-    },
-    {
-      icon: Trophy,
-      tone: '#E2552F',
-      bg: '#FFF5F1',
-      title: 'Students',
-      body: 'Fun quests, XP, streaks and leagues that make practice feel like a game.',
-    },
-  ];
-  return (
-    <section className="lp-section" style={{ background: 'var(--paper)' }}>
-      <div className="lp-wrap">
-        <div className="lp-section-head center" data-reveal>
-          <h2 className="lp-h2">Made for everyone in your school community</h2>
-        </div>
-        <div className="lp-people">
-          {people.map((p, i) => {
-            const Icon = p.icon;
-            return (
-              <article key={p.title} className="lp-person" data-reveal style={{ '--d': `${i * 0.07}s` } as React.CSSProperties}>
-                <span className="lp-tile-icon" style={{ background: p.bg, color: p.tone, boxShadow: 'none' }}>
-                  <Icon size={26} />
-                </span>
-                <h3>{p.title}</h3>
-                <p>{p.body}</p>
-              </article>
-            );
-          })}
-        </div>
       </div>
     </section>
   );
@@ -627,22 +550,12 @@ function People() {
 
 function HowItWorks() {
   const steps = [
-    { color: '#5B3DF5', icon: CalendarCheck, title: 'Book a demo', body: 'A 30-minute call or visit. We show you around and answer every question.' },
-    {
-      color: '#19C39C',
-      icon: FileSpreadsheet,
-      title: 'We set you up',
-      body: 'Send us your student list in Excel. We import your classes, students and parent contacts.',
-    },
-    {
-      color: '#FF6B4A',
-      icon: Smartphone,
-      title: 'Parents and students join',
-      body: 'Everyone gets an invite to the app, and the first weekly reports go out that Friday.',
-    },
+    { color: '#5B3DF5', icon: UserPlus, title: 'Create your account', body: 'Sign up as a parent in the app or in your browser. It takes a minute.' },
+    { color: '#19C39C', icon: Users, title: 'Add your children', body: 'Pick each child’s class. They get their own username and a 4-digit PIN to sign in.' },
+    { color: '#FF6B4A', icon: CalendarCheck, title: 'They practise, you see it', body: 'Short rounds every day, a mock on Friday, and your report every week.' },
   ];
   return (
-    <section id="how" className="lp-section">
+    <section id="how" className="lp-section" style={{ background: 'var(--paper)' }}>
       <div className="lp-wrap">
         <div className="lp-section-head center" data-reveal>
           <span className="lp-eyebrow">
@@ -651,7 +564,7 @@ function HowItWorks() {
             </span>
             How it works
           </span>
-          <h2 className="lp-h2">Live in days, not terms</h2>
+          <h2 className="lp-h2">Start tonight, no school needed</h2>
         </div>
         <div className="lp-steps">
           {steps.map((s, i) => {
@@ -669,6 +582,11 @@ function HowItWorks() {
             );
           })}
         </div>
+        <div className="lp-hero-ctas" style={{ justifyContent: 'center', marginTop: 40 }} data-reveal>
+          <a href={APP} className="lp-btn">
+            Open the app <ArrowRight size={20} className="arrow" />
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -678,18 +596,18 @@ function HowItWorks() {
 
 function Trust() {
   const items = [
-    { icon: ShieldCheck, title: 'Parent consent first', body: 'Parents choose what their child’s data is used for, and can change it at any time.' },
-    { icon: Lock, title: 'Role-based access', body: 'Teachers see their classes, parents see their own children, and nobody sees more.' },
-    { icon: Eye, title: 'Every view is logged', body: 'A record of who opened a student’s file, and when.' },
+    { icon: ShieldCheck, title: 'You’re in charge', body: 'You create your child’s login and choose what their data is used for. Change it any time.' },
+    { icon: Lock, title: 'A safe place to learn', body: 'No ads, and no chatting with strangers. Children sign in with a username and PIN you set.' },
+    { icon: Eye, title: 'You see what they see', body: 'Every round, score and mock result shows up on your dashboard.' },
     { icon: HeartHandshake, title: 'Never sold', body: 'We never share or sell children’s data to advertisers.' },
   ];
   return (
-    <section className="lp-section" style={{ paddingTop: 0 }}>
+    <section className="lp-section">
       <div className="lp-wrap">
         <div className="lp-trust" data-reveal>
           <div className="lp-section-head" style={{ margin: 0, position: 'relative', zIndex: 1 }}>
-            <h2 className="lp-h2">Children’s data, handled with care</h2>
-            <p className="lp-lead">You’re trusted with your students’ information. We built {N} so you can keep that trust.</p>
+            <h2 className="lp-h2">Built for children, run by parents</h2>
+            <p className="lp-lead">Your child’s learning and data stay in your hands.</p>
           </div>
           <div className="lp-trust-grid">
             {items.map((it) => {
@@ -715,35 +633,35 @@ function Trust() {
 function Faq() {
   const faqs = [
     {
-      q: `How much does ${N} cost?`,
-      a: `There’s no setup fee. We’ll walk you through pricing for your school on the demo.`,
+      q: 'Does my child’s school need to use ' + N + '?',
+      a: 'No. You sign up yourself and add your children. If their school joins later, your reports can include school results and attendance too.',
     },
     {
-      q: 'Do parents need a smartphone?',
-      a: 'The app gives parents the most, but weekly reports also go out by email, and on WhatsApp for parents who choose it, so no parent is left out.',
+      q: 'Do we need to download anything?',
+      a: `No. ${N} works in the browser on any phone, tablet or laptop. Just open the app link and sign in.`,
     },
     {
-      q: 'We already keep records in Excel. Do we start from scratch?',
-      a: 'No. Send us your spreadsheets and we’ll import your classes, students and parent contacts for you.',
+      q: 'Which exams and classes do you cover?',
+      a: 'Common Entrance, BECE, WAEC, NECO and JAMB, plus class practice for Nursery 1 and 2 and Primary 1 to 5.',
     },
     {
-      q: 'Does it work for both primary and secondary?',
-      a: 'Yes. Nursery, primary, junior and senior secondary are all supported, and the student app changes its look and content to suit each age group.',
+      q: 'Where do the questions come from?',
+      a: 'We study past papers to learn what each exam tests and how, then write our own original questions to match. Answers are checked before any child sees them.',
     },
     {
-      q: 'How are lesson teachers vetted?',
-      a: 'Every tutor submits ID and documents, passes a subject test and is interviewed by our team. Only tutors who pass all three appear to parents.',
+      q: 'My child is in nursery and can’t read yet. Can they use it?',
+      a: 'Yes. Every nursery question is read aloud, and answers are big pictures they tap. You can turn the voice off at any time.',
     },
     {
-      q: 'Who owns our school’s data?',
-      a: 'Your school does. We only use it to run the service for you and your parents, with consent, and we never sell it.',
+      q: 'Can I add more than one child?',
+      a: 'Yes. Add all your children to one parent account. Each gets their own login, practice and weekly report.',
     },
   ];
   return (
     <section id="faq" className="lp-section" style={{ paddingTop: 40 }}>
       <div className="lp-wrap">
         <div className="lp-section-head center" data-reveal>
-          <h2 className="lp-h2">Questions schools ask us</h2>
+          <h2 className="lp-h2">Questions parents ask us</h2>
         </div>
         <div className="lp-faq" data-reveal>
           {faqs.map((f) => (
@@ -761,27 +679,36 @@ function Faq() {
   );
 }
 
-/* ── Demo ─────────────────────────────────────────────── */
+/* ── For schools ──────────────────────────────────────── */
 
-function Demo() {
+function Schools() {
   return (
-    <section id="demo" className="lp-section" style={{ paddingTop: 40, paddingBottom: 0 }}>
+    <section id="schools" className="lp-section" style={{ paddingTop: 40, paddingBottom: 0 }}>
       <div className="lp-wrap">
         <div className="lp-demo" data-reveal>
           <div>
-            <h2 className="lp-h2">See {N} working for your school</h2>
+            <span className="lp-eyebrow" style={{ background: 'rgba(255,255,255,0.15)', color: '#FFFFFF' }}>
+              <span className="lp-eyebrow-dot">
+                <School size={13} />
+              </span>
+              For schools
+            </span>
+            <h2 className="lp-h2" style={{ marginTop: 16 }}>
+              Your parents are already on {N}?
+            </h2>
             <p className="lp-lead" style={{ marginTop: 18 }}>
-              Tell us a little about your school and we’ll set up a free, no-pressure demo at a time that suits you.
+              Connect your school and their weekly reports include your attendance and results, and you get a simple system for
+              students, results and fees.
             </p>
             <ul className="lp-demo-points">
               <li>
+                <Check size={20} strokeWidth={3} /> Reports parents read, built from what your teachers record
+              </li>
+              <li>
+                <Check size={20} strokeWidth={3} /> We import your students from Excel for you
+              </li>
+              <li>
                 <Check size={20} strokeWidth={3} /> A 30-minute walkthrough, online or at your school
-              </li>
-              <li>
-                <Check size={20} strokeWidth={3} /> A sample parent report using your own class setup
-              </li>
-              <li>
-                <Check size={20} strokeWidth={3} /> Clear answers on setup, pricing and support
               </li>
             </ul>
           </div>
@@ -801,15 +728,16 @@ function Footer() {
         <div className="lp-footer-inner">
           <div>
             <Logo />
-            <p>School management, weekly parent reports and gamified learning for Nigerian schools.</p>
+            <p>Exam prep, daily practice and weekly progress reports for Nigerian families.</p>
           </div>
           <nav className="lp-footer-links" aria-label="Footer">
-            <a href="#features">Features</a>
-            <a href="#reports">Parent reports</a>
-            <a href="#learning">Student app</a>
-            <a href="#tutors">Lesson teachers</a>
+            <a href={APP}>Open the app</a>
+            <a href="#exam-prep">Exam prep</a>
+            <a href="#little-learners">Nursery and primary</a>
+            <a href="#reports">Weekly reports</a>
             <a href="#faq">FAQ</a>
-            <a href="/login">Log in</a>
+            <a href="#schools">For schools</a>
+            <a href="/login">School and staff log in</a>
           </nav>
         </div>
         <div className="lp-footer-base">
