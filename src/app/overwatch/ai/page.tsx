@@ -12,7 +12,7 @@ import { api } from '@/lib/api';
 import { naira } from '@/lib/format';
 
 type Usage = {
-  config: { model: string; configured: boolean; inputPerM: number; outputPerM: number; ngnPerUsd: number };
+  config: { model: string; configured: boolean; inputPerM: number; outputPerM: number; ngnPerUsd: number; monthlyBudgetUsd: number; monthCostMicroUsd: number };
   totals: { calls: number; failed: number; inputTokens: number; outputTokens: number; costMicroUsd: number; costKobo: number; avgLatencyMs: number };
   series: { day: string; calls: number; failed: number; tokens: number; costKobo: number }[];
   byFeature: { feature: string; calls: number; tokens: number; costKobo: number }[];
@@ -49,6 +49,8 @@ function AiDashboard({ d, days }: { d: Usage; days: number }) {
       <Notice tone="sky">
         Model <b>{d.config.model}</b> · priced at ${d.config.inputPerM} per million input tokens and ${d.config.outputPerM} per million output tokens, at ₦{d.config.ngnPerUsd.toLocaleString()}/$. Change these with <code>AI_PRICE_INPUT_PER_M</code>, <code>AI_PRICE_OUTPUT_PER_M</code> and <code>AI_NGN_PER_USD</code> in the backend <code>.env</code> to match your Google bill.
       </Notice>
+
+      <MonthBudget config={d.config} />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <Kpi label="AI cost" tone="coral" value={money(t.costKobo)} hint={`≈ $${(t.costMicroUsd / 1_000_000).toFixed(2)} · ${days} days`} icon={<Coins className="size-5" />} />
@@ -156,5 +158,26 @@ function AiDashboard({ d, days }: { d: Usage; days: number }) {
         )}
       </ChartCard>
     </div>
+  );
+}
+
+/** This month's AI spend against the platform-wide ceiling (AI_MONTHLY_BUDGET_USD). */
+function MonthBudget({ config: c }: { config: Usage['config'] }) {
+  const spent = c.monthCostMicroUsd / 1_000_000;
+  if (!c.monthlyBudgetUsd) {
+    return (
+      <Notice tone="sun" title={`$${spent.toFixed(2)} spent on AI this month, with no ceiling`}>
+        Set <code>AI_MONTHLY_BUDGET_USD</code> in the backend <code>.env</code> to cap it. When the cap is reached, AI stops until the 1st and reports use the plain summary.
+      </Notice>
+    );
+  }
+  const used = (spent / c.monthlyBudgetUsd) * 100;
+  return (
+    <ChartCard title="AI budget this month" subtitle={used >= 100 ? 'Ceiling reached: AI is paused until the 1st, and reports use the plain summary.' : 'All AI across Nexus, reset on the 1st (Lagos time)'}>
+      <Meter value={Math.min(used, 100)} tone={used >= 100 ? 'coral' : used >= 80 ? 'sun' : 'mint'} />
+      <p className="text-sm text-ink-700">
+        <b>${spent.toFixed(2)}</b> of ${c.monthlyBudgetUsd.toFixed(2)} ({Math.round(used)}%)
+      </p>
+    </ChartCard>
   );
 }
