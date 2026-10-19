@@ -11,9 +11,9 @@ import { toast } from '@/components/ui/toast';
 import { api, errorText } from '@/lib/api';
 
 type Status = 'DRAFT' | 'IN_REVIEW' | 'APPROVED' | 'RETIRED';
-type Exam = 'JAMB' | 'WAEC' | 'NECO' | 'BECE' | 'COMMON_ENTRANCE';
-const EXAMS: Exam[] = ['JAMB', 'WAEC', 'NECO', 'BECE', 'COMMON_ENTRANCE'];
-const EXAM_LABEL: Record<Exam, string> = { JAMB: 'JAMB', WAEC: 'WAEC', NECO: 'NECO', BECE: 'BECE', COMMON_ENTRANCE: 'Common Entrance' };
+type Exam = 'JAMB' | 'WAEC' | 'NECO' | 'BECE' | 'COMMON_ENTRANCE' | 'PRIMARY';
+const EXAMS: Exam[] = ['JAMB', 'WAEC', 'NECO', 'BECE', 'COMMON_ENTRANCE', 'PRIMARY'];
+const EXAM_LABEL: Record<Exam, string> = { JAMB: 'JAMB', WAEC: 'WAEC', NECO: 'NECO', BECE: 'BECE', COMMON_ENTRANCE: 'Common Entrance', PRIMARY: 'Class practice' };
 const STATUS: Record<Status, { label: string; tone: Tone }> = {
   DRAFT: { label: 'Draft', tone: 'ink' },
   IN_REVIEW: { label: 'Waiting review', tone: 'sun' },
