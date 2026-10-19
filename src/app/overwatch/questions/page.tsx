@@ -97,6 +97,16 @@ export default function QuestionBankPage() {
     },
     onError: (e) => toast.error(errorText(e)),
   });
+  const approveMatching = useMutation({
+    mutationFn: () => api<{ updated: number; templates: number }>('/admin/question-bank/questions/approve-matching', { method: 'POST', body: { ...Object.fromEntries(Object.entries(f).filter(([k, v]) => v && k !== 'status')), ...(f.difficulty ? { difficulty: Number(f.difficulty) } : {}), ...(f.reported ? { reported: f.reported === 'true' } : {}) } }),
+    onSuccess: (r) => {
+      toast.success(`${r.updated.toLocaleString()} questions now live for students${r.templates ? `, and ${r.templates} templates approved, so their future questions go live too` : ''}.`);
+      setPicked(new Set());
+      setPage(1);
+      refresh();
+    },
+    onError: (e) => toast.error(errorText(e)),
+  });
   const dismiss = useMutation({
     mutationFn: (reportId: string) => api(`/admin/question-bank/reports/${reportId}/dismiss`, { method: 'POST', body: {} }),
     onSuccess: () => {
@@ -218,10 +228,23 @@ export default function QuestionBankPage() {
         />
       ) : (
         <div className={list.isPlaceholderData ? 'opacity-60 transition' : 'transition'}>
-          <label className="mb-2 flex w-fit cursor-pointer items-center gap-2 text-sm font-bold text-ink-500">
-            <input type="checkbox" className="size-4 accent-violet-600" checked={allPicked} onChange={() => setPicked(allPicked ? new Set() : new Set(items.map((q) => q.id)))} />
-            Select all on this page
-          </label>
+          <div className="mb-2 flex flex-wrap items-center gap-3">
+            <label className="mr-auto flex w-fit cursor-pointer items-center gap-2 text-sm font-bold text-ink-500">
+              <input type="checkbox" className="size-4 accent-violet-600" checked={allPicked} onChange={() => setPicked(allPicked ? new Set() : new Set(items.map((q) => q.id)))} />
+              Select all on this page
+            </label>
+            {f.status === 'IN_REVIEW' && list.data.total > items.length ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                loading={approveMatching.isPending}
+                icon={<CheckCheck className="size-4" />}
+                onClick={() => confirm(`Approve all ${list.data.total.toLocaleString()} questions waiting review that match these filters? They go live for students straight away.`) && approveMatching.mutate()}
+              >
+                Approve all {list.data.total.toLocaleString()} waiting
+              </Button>
+            ) : null}
+          </div>
           <ol className="flex flex-col gap-3">
             {items.map((q) => (
               <QuestionCard
