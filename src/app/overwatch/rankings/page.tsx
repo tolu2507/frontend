@@ -9,8 +9,8 @@ import { Badge, Card, Empty, ErrorBox, Loading, PageHeader, Table, Tabs } from '
 import { api } from '@/lib/api';
 import { date } from '@/lib/format';
 
-type Exam = 'JAMB' | 'WAEC' | 'NECO' | 'BECE' | 'COMMON_ENTRANCE' | 'PRIMARY';
-const EXAM_LABEL: Record<Exam, string> = { JAMB: 'JAMB', WAEC: 'WAEC', NECO: 'NECO', BECE: 'BECE', COMMON_ENTRANCE: 'Common Entrance', PRIMARY: 'Class practice' };
+type Exam = 'JAMB' | 'WAEC' | 'NECO' | 'BECE' | 'COMMON_ENTRANCE' | 'PRIMARY' | 'NURSERY';
+const EXAM_LABEL: Record<Exam, string> = { JAMB: 'JAMB', WAEC: 'WAEC', NECO: 'NECO', BECE: 'BECE', COMMON_ENTRANCE: 'Common Entrance', PRIMARY: 'Primary class practice', NURSERY: 'Nursery class practice' };
 
 type Student = { rank: number | null; id: string; name: string; class: string; school: string };
 type Rankings = {
