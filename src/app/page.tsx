@@ -30,6 +30,7 @@ import { Logo } from '@/components/landing/Logo';
 import { Nav } from '@/components/landing/Nav';
 import { RevealObserver } from '@/components/landing/RevealObserver';
 import { brand } from '@/config/brand';
+import { FAQS, seo } from '@/config/seo';
 
 import './landing.css';
 
@@ -39,6 +40,7 @@ const APP = brand.appUrl;
 export default function LandingPage() {
   return (
     <div className="lp">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData()).replace(/</g, '\\u003c') }} />
       <Nav />
       <main>
         <Hero />
@@ -54,6 +56,29 @@ export default function LandingPage() {
       <RevealObserver />
     </div>
   );
+}
+
+/** Tells search engines who Nexus is, what the app does and what parents ask, so results can show it richly. */
+function structuredData() {
+  const url = brand.siteUrl;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Organization', '@id': `${url}/#org`, name: N, url, logo: `${url}/logo.png`, areaServed: 'NG' },
+      { '@type': 'WebSite', '@id': `${url}/#website`, name: N, url, inLanguage: 'en-NG', publisher: { '@id': `${url}/#org` } },
+      {
+        '@type': 'SoftwareApplication',
+        name: N,
+        url: APP,
+        applicationCategory: 'EducationalApplication',
+        operatingSystem: 'Android, iOS, Web',
+        description: seo.description,
+        publisher: { '@id': `${url}/#org` },
+        audience: { '@type': 'EducationalAudience', educationalRole: 'parent' },
+      },
+      { '@type': 'FAQPage', mainEntity: FAQS.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+    ],
+  };
 }
 
 /* ── Hero ─────────────────────────────────────────────── */
@@ -622,32 +647,6 @@ function Trust() {
 /* ── FAQ ──────────────────────────────────────────────── */
 
 function Faq() {
-  const faqs = [
-    {
-      q: 'Does my child’s school need to use ' + N + '?',
-      a: 'No. You sign up yourself and add your children. If their school joins later, your reports can include school results and attendance too.',
-    },
-    {
-      q: 'Do we need to download an app?',
-      a: `Get ${N} from Google Play or the App Store, or skip the download and use it in the browser on any phone, tablet or laptop.`,
-    },
-    {
-      q: 'Which exams and classes do you cover?',
-      a: 'Common Entrance, BECE, WAEC, NECO and JAMB, plus class practice for Nursery 1 and 2 and Primary 1 to 5.',
-    },
-    {
-      q: 'Where do the questions come from?',
-      a: 'We study past papers to learn what each exam tests and how, then write our own original questions to match. Answers are checked before any child sees them.',
-    },
-    {
-      q: 'My child is in nursery and can’t read yet. Can they use it?',
-      a: 'Yes. Every nursery question is read aloud, and answers are big pictures they tap. You can turn the voice off at any time.',
-    },
-    {
-      q: 'Can I add more than one child?',
-      a: 'Yes. Add all your children to one parent account. Each gets their own login, practice and weekly report.',
-    },
-  ];
   return (
     <section id="faq" className="lp-section" style={{ paddingTop: 40 }}>
       <div className="lp-wrap">
@@ -655,7 +654,7 @@ function Faq() {
           <h2 className="lp-h2">Questions parents ask us</h2>
         </div>
         <div className="lp-faq" data-reveal>
-          {faqs.map((f) => (
+          {FAQS.map((f) => (
             <details key={f.q}>
               <summary>
                 {f.q}

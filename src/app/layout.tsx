@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { brand } from "@/config/brand";
+import { seo } from "@/config/seo";
 
 const display = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -17,14 +18,20 @@ const body = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: `${brand.name} · Exam prep and daily practice for your child, from Nursery to JAMB`,
-  description:
-    "Fun daily practice for your child's class and exams (Common Entrance, BECE, WAEC, NECO, JAMB), a mock exam every Friday, and a clear progress report for you every week.",
+  metadataBase: new URL(brand.siteUrl),
+  title: { default: seo.title, template: `%s | ${brand.name}` },
+  description: seo.description,
+  applicationName: brand.name,
+  category: "education",
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: brand.name, locale: seo.locale, url: "/", title: seo.shareTitle, description: seo.description },
+  twitter: { card: "summary_large_image", title: seo.shareTitle, description: seo.description },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en-NG" className={`${display.variable} ${body.variable}`}>
       <body>
         <Providers>{children}</Providers>
       </body>
