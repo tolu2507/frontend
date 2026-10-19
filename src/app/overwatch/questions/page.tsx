@@ -54,6 +54,7 @@ type Question = {
   createdAt: string;
 };
 type Page = { total: number; page: number; pageSize: number; items: Question[] };
+type TemplateRow = { id: string; key: string; status: Status; difficulty: number; topic: string; questions: number; sample: { stem: string; options: Option[]; answerId: string; explanation: string } | null };
 
 const sum = (c: Counts) => c.DRAFT + c.IN_REVIEW + c.APPROVED + c.RETIRED;
 
@@ -63,6 +64,7 @@ export default function QuestionBankPage() {
   const [page, setPage] = useState(1);
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [editing, setEditing] = useState<Question | null>(null);
+  const [view, setView] = useState<'questions' | 'templates'>('questions');
   const set = (k: keyof typeof f) => (v: string) => {
     setF((x) => ({ ...x, [k]: v, ...(k === 'exam' ? { subjectId: '', topicId: '' } : k === 'subjectId' ? { topicId: '' } : {}) }));
     setPage(1);
@@ -151,7 +153,7 @@ export default function QuestionBankPage() {
             ))}
           </Table>
           <p className="px-4 py-3 text-xs text-ink-500">
-            {(summary.data?.subjects.length ?? 0) - withContent.length} more subjects have nothing yet. Past papers are still downloading, and each subject is analysed once its papers are in.
+            {(summary.data?.subjects.length ?? 0) - withContent.length} more subjects have nothing yet. Each one appears here once its syllabus and questions are added.
           </p>
         </Card>
       ) : null}
@@ -174,6 +176,20 @@ export default function QuestionBankPage() {
         <SearchBox value={f.q} onChange={set('q')} placeholder="Search question text" />
       </Filters>
 
+      {f.subjectId ? (
+        <div className="mb-4 flex w-fit gap-1 rounded-xl bg-ink-100 p-1 text-sm font-bold" role="tablist">
+          {(['questions', 'templates'] as const).map((v) => (
+            <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => setView(v)} className={cx('rounded-lg px-3 py-1.5', view === v ? 'bg-white shadow-sm' : 'text-ink-500')}>
+              {v === 'questions' ? 'Questions' : 'Templates'}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      {f.subjectId && view === 'templates' ? (
+        <TemplateReview subjectId={f.subjectId} onStatus={(id, status) => templateStatus.mutateAsync({ id, status })} />
+      ) : (
+      <>
       {picked.size ? (
         <div className="sticky top-2 z-10 mb-3 flex flex-wrap items-center gap-2 rounded-2xl bg-ink px-4 py-3 text-white shadow-lg">
           <span className="mr-auto text-sm font-bold">{picked.size} selected</span>
@@ -198,7 +214,7 @@ export default function QuestionBankPage() {
         <Empty
           icon={<Library className="size-7" />}
           title={f.status === 'IN_REVIEW' ? 'Nothing waiting for review' : 'No questions match'}
-          message={totals.IN_REVIEW + totals.APPROVED === 0 ? 'Questions appear here once the writing pipeline runs for a subject.' : 'Try another filter.'}
+          message={totals.IN_REVIEW + totals.APPROVED === 0 ? 'Questions appear here once templates or the writing script add them for a subject.' : 'Try another filter.'}
         />
       ) : (
         <div className={list.isPlaceholderData ? 'opacity-60 transition' : 'transition'}>
@@ -223,8 +239,113 @@ export default function QuestionBankPage() {
           <Pager page={page} pageSize={PAGE} total={list.data.total} onPage={(p) => { setPage(p); setPicked(new Set()); window.scrollTo({ top: 0 }); }} />
         </div>
       )}
+      </>
+      )}
       {editing ? <QuestionEditor q={editing} onClose={() => setEditing(null)} onSaved={refresh} /> : null}
     </>
+  );
+}
+
+/** Every template in a subject with one sample each: check the sample, then decide for all its questions at once. */
+function TemplateReview({ subjectId, onStatus }: { subjectId: string; onStatus: (id: string, s: Status) => Promise<unknown> }) {
+  const qc = useQueryClient();
+  const q = useQuery({ queryKey: ['ow', 'qbank', 'templates', subjectId], queryFn: () => api<TemplateRow[]>(`/admin/question-bank/subjects/${subjectId}/templates`) });
+  const [busy, setBusy] = useState(false);
+  if (q.isPending) return <Loading />;
+  if (q.error) return <ErrorBox error={q.error} onRetry={q.refetch} />;
+  const rows = q.data;
+  if (!rows.length) return <Empty icon={<Library className="size-7" />} title="No templates in this subject" message="Its questions come from other sources. Switch to Questions to review them." />;
+  const waiting = rows.filter((t) => t.status === 'IN_REVIEW' || t.status === 'DRAFT');
+  const approveAll = async () => {
+    if (!confirm(`Approve all ${waiting.length} waiting templates (${waiting.reduce((n, t) => n + t.questions, 0).toLocaleString()} questions)? Only do this after checking their samples.`)) return;
+    setBusy(true);
+    let updated = 0;
+    try {
+      // One at a time and without a toast each; one summary at the end.
+      for (const t of waiting) updated += (await api<{ updated: number }>(`/admin/question-bank/templates/${t.id}/status`, { method: 'POST', body: { status: 'APPROVED' } })).updated;
+      toast.success(`${waiting.length} templates approved: ${updated.toLocaleString()} questions now live for students.`);
+    } catch (e) {
+      toast.error(errorText(e));
+    } finally {
+      setBusy(false);
+      qc.invalidateQueries({ queryKey: ['ow', 'qbank'] });
+    }
+  };
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-2 text-sm text-ink-500">
+        <span className="mr-auto">
+          {rows.length} templates · {waiting.length} waiting review · {rows.filter((t) => t.status === 'APPROVED').length} live
+        </span>
+        {waiting.length > 1 ? (
+          <Button size="sm" variant="secondary" loading={busy} onClick={approveAll} icon={<CheckCheck className="size-4" />}>
+            Approve all {waiting.length} waiting
+          </Button>
+        ) : null}
+      </div>
+      <ol className="flex flex-col gap-3">
+        {rows.map((t) => (
+          <TemplateCard key={t.id} t={t} onStatus={(s) => onStatus(t.id, s)} />
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+function TemplateCard({ t, onStatus }: { t: TemplateRow; onStatus: (s: Status) => Promise<unknown> }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <li className="rounded-2xl border border-ink-100 bg-white p-4">
+      <div className="mb-2 flex flex-wrap items-center gap-1.5 text-xs">
+        <Badge tone={STATUS[t.status].tone}>{STATUS[t.status].label}</Badge>
+        <code className="rounded bg-paper px-1.5 py-0.5 text-xs">{t.key}</code>
+        <span className="font-semibold text-ink-500">{t.topic}</span>
+        <span className="text-ink-300">·</span>
+        <span className="text-ink-500">
+          {t.questions.toLocaleString()} questions · difficulty {t.difficulty}
+        </span>
+      </div>
+      {t.sample ? (
+        <>
+          <MathText text={t.sample.stem} className="block text-[15px] leading-relaxed font-semibold" />
+          <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
+            {t.sample.options.map((o, i) => (
+              <li key={o.id} className={cx('flex items-start gap-2 rounded-xl border-2 px-3 py-2 text-sm', o.id === t.sample!.answerId ? 'border-mint-600 bg-mint-50 font-bold' : 'border-ink-100')}>
+                <span className="font-extrabold text-ink-300">{'ABCDE'[i]}</span>
+                <MathText text={o.label} />
+                {o.id === t.sample!.answerId ? <CircleCheck className="ml-auto size-4 shrink-0 text-mint-700" aria-label="Correct answer" /> : null}
+              </li>
+            ))}
+          </ul>
+          <button type="button" onClick={() => setOpen((x) => !x)} className="mt-2 text-sm font-bold text-violet-700 hover:underline">
+            {open ? 'Hide explanation' : 'Show explanation'}
+          </button>
+          {open ? (
+            <div className="mt-2 rounded-xl bg-paper p-3 text-sm leading-relaxed">
+              <MathText text={t.sample.explanation} />
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <p className="text-sm text-ink-500">No questions made from this template yet.</p>
+      )}
+      <div className="mt-3 flex flex-wrap justify-end gap-1 border-t border-ink-100 pt-3">
+        {t.status !== 'APPROVED' ? (
+          <Button size="sm" icon={<CheckCheck className="size-4" />} onClick={() => onStatus('APPROVED')}>
+            Approve all {t.questions.toLocaleString()}
+          </Button>
+        ) : null}
+        {t.status !== 'RETIRED' ? (
+          <Button size="sm" variant="ghost" icon={<Archive className="size-4" />} onClick={() => confirm(`Retire this template? Its ${t.questions} questions stop being used.`) && onStatus('RETIRED')}>
+            Retire
+          </Button>
+        ) : (
+          <Button size="sm" variant="ghost" icon={<RotateCcw className="size-4" />} onClick={() => onStatus('IN_REVIEW')}>
+            Back to review
+          </Button>
+        )}
+      </div>
+    </li>
   );
 }
 
@@ -276,7 +397,7 @@ function QuestionCard({ q, picked, onPick, onEdit, onStatus, onDismiss, onTempla
           {q.template ? (
             <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-sky-100/60 p-3 text-sm">
               <span className="mr-auto text-sky-800">
-                One of <b>{q.template.questions}</b> questions from the template <code className="rounded bg-white px-1 text-xs">{q.template.key}</code>. The numbers change each time; the answer is always worked out by code. Check a few, then decide for all of them.
+                One of <b>{q.template.questions}</b> questions from the template <code className="rounded bg-white px-1 text-xs">{q.template.key}</code>. Every one is made the same way and its answer is worked out by code, so if a few are right, they all are. Check a few, then decide for all of them.
               </span>
               {q.template.status !== 'APPROVED' ? (
                 <Button size="sm" onClick={() => onTemplate(q.template!.id, 'APPROVED')} icon={<CheckCheck className="size-4" />}>

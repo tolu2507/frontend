@@ -225,7 +225,6 @@ function AgreementForm({ schoolId, onClose }: { schoolId: string; onClose: () =>
               </label>
             ))}
           </div>
-          <p className="mt-2 text-sm text-ink-500">Lesson-teacher bookings are never shared with schools.</p>
           {formState.errors.streams ? <p className="text-[13px] font-semibold text-coral-700">{formState.errors.streams.message}</p> : null}
         </fieldset>
         <Input label="Starts" type="date" error={formState.errors.startsAt?.message} {...register('startsAt')} />

@@ -25,7 +25,8 @@ type Detail = {
   entries: { id: string; at: string; type: string; stream: string; amountKobo: number; balanceAfterKobo: number; description: string | null; actor: string | null; reference: string | null }[];
 };
 
-const TYPES = ['STUDENT_SPEND', 'TUTOR_EARNINGS', 'SCHOOL_REVENUE', 'ESCROW', 'PLATFORM_REVENUE'];
+// Tutoring is paused, so its wallet types (TUTOR_EARNINGS, ESCROW) aren't shown.
+const TYPES = ['STUDENT_SPEND', 'SCHOOL_REVENUE', 'PLATFORM_REVENUE'];
 const PAGE = 25;
 
 export default function WalletsPage() {
@@ -40,7 +41,7 @@ export default function WalletsPage() {
 
   return (
     <>
-      <PageHeader title="Wallets" subtitle="Every balance Nexus holds: children’s pocket money, tutor earnings, school revenue and escrow." />
+      <PageHeader title="Wallets" subtitle="Every balance Nexus holds: children’s pocket money, school revenue and Nexus’s own revenue." />
 
       {list.data ? (
         <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">

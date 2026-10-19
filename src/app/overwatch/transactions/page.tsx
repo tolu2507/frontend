@@ -17,7 +17,7 @@ type Payment = { id: string; reference: string; provider: string; providerRef: s
 type Payments = Paged<Payment> & { byStatus: { status: string; count: number; amountKobo: number }[] };
 
 const ENTRY_TYPES = ['TOPUP', 'PURCHASE', 'FEE_PAYMENT', 'ESCROW_HOLD', 'ESCROW_RELEASE', 'PLATFORM_FEE', 'PAYOUT', 'REFUND', 'ADJUSTMENT'];
-const STREAMS = ['SCHOOL_FEES', 'TUCK_SHOP', 'SUBSCRIPTION', 'TUTORING', 'OTHER'];
+const STREAMS = ['SCHOOL_FEES', 'TUCK_SHOP', 'SUBSCRIPTION', 'OTHER'];
 const STATUS_TONE: Record<string, Tone> = { SUCCESS: 'mint', PENDING: 'sun', FAILED: 'coral', REFUNDED: 'sky' };
 const PAGE = 50;
 
@@ -95,7 +95,7 @@ function LedgerTab() {
       ) : list.error ? (
         <ErrorBox error={list.error} onRetry={list.refetch} />
       ) : list.data.rows.length === 0 ? (
-        <Empty icon={<ArrowLeftRight className="size-7" />} title="No transactions" message="Top-ups, tuck-shop purchases, fee payments and lesson escrow will appear here." />
+        <Empty icon={<ArrowLeftRight className="size-7" />} title="No transactions" message="Top-ups, tuck-shop purchases, fee payments and subscriptions will appear here." />
       ) : (
         <div className={list.isPlaceholderData ? 'opacity-60 transition' : 'transition'}>
           <div className="mb-3 flex flex-wrap gap-2">

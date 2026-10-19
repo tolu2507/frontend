@@ -78,7 +78,7 @@ function Dashboard({ d }: { d: Analytics }) {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Money collected" subtitle="Successful payments per day (fees, top-ups, lessons)">
+        <ChartCard title="Money collected" subtitle="Successful payments per day (fees, top-ups, subscriptions)">
           <TrendChart data={d.series} series={[{ key: 'paymentsKobo', label: 'Collected' }]} format={nairaCompact} empty="No payments in this period" />
         </ChartCard>
         <ChartCard title="Learning activity" subtitle="Quests finished and students learning, per day">
