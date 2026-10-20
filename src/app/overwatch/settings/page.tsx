@@ -64,7 +64,7 @@ export default function SettingsPage() {
         }
       />
       <div className="flex flex-col gap-6">
-        <Notice tone="sky">Price and trial changes apply to new payments and new trials. Parents who already paid keep what they paid for.</Notice>
+        <Notice tone="sky">A price change applies to new payments: parents who already paid keep what they paid for. The trial length applies to every trial straight away, including ones already running.</Notice>
         {GROUPS.map((group) => (
           <Card key={group} className="flex flex-col gap-1">
             <h2 className="mb-2 font-display text-lg font-bold">{group}</h2>
