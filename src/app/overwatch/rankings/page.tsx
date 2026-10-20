@@ -29,7 +29,7 @@ export default function RankingsPage() {
 
   return (
     <>
-      <PageHeader title="Rankings" subtitle="The students working hardest and scoring best, across Nexus." />
+      <PageHeader title="Rankings" subtitle="The students working hardest and scoring best, across BrainBox." />
       <Filters>
         <FilterSelect label="Exam" value={exam} onChange={setExam} options={[{ value: '', label: 'All students' }, ...(Object.keys(EXAM_LABEL) as Exam[]).map((e) => ({ value: e, label: `Preparing for ${EXAM_LABEL[e]}` }))]} />
       </Filters>

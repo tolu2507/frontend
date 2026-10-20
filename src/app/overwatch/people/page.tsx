@@ -57,7 +57,7 @@ function People() {
 
   return (
     <>
-      <PageHeader title="People" subtitle="Everyone on Nexus, across every school." />
+      <PageHeader title="People" subtitle="Everyone on BrainBox, across every school." />
       <Tabs
         value={kind}
         onChange={setKind}

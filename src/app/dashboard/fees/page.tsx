@@ -325,7 +325,7 @@ function PaymentForm({ invoice, onClose }: { invoice: Invoice; onClose: () => vo
       }
     >
       <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-        <p className="text-[15px] text-ink-500">For money paid straight to the school. Payments made in the Nexus app are recorded automatically.</p>
+        <p className="text-[15px] text-ink-500">For money paid straight to the school. Payments made in the BrainBox app are recorded automatically.</p>
         <Input label="Amount (₦)" inputMode="decimal" hint={`${naira(owedNaira * 100)} still owed`} error={formState.errors.amount?.message} {...register('amount')} />
         <Select
           label="Paid by"

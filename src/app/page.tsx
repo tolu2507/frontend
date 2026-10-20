@@ -58,7 +58,7 @@ export default function LandingPage() {
   );
 }
 
-/** Tells search engines who Nexus is, what the app does and what parents ask, so results can show it richly. */
+/** Tells search engines who BrainBox is, what the app does and what parents ask, so results can show it richly. */
 function structuredData() {
   const url = brand.siteUrl;
   return {

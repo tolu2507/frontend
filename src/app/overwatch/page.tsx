@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Banknote, Bot, Building2, GraduationCap, Inbox, Sparkles, UserPlus, Users } from 'lucide-react';
+import { Banknote, Bot, Building2, CirclePause, GraduationCap, Hourglass, Inbox, Sparkles, UserPlus, Users, WalletCards } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -14,13 +14,14 @@ import { naira } from '@/lib/format';
 type K = { value: number; previous: number; changePct: number | null };
 type Analytics = {
   days: number;
-  totals: { schools: Record<string, number>; students: number; parents: number; staff: number };
+  totals: { schools: Record<string, number>; students: number; parents: number; staff: number; plans: { paying: number; trial: number; ended: number } };
   kpis: { paymentsKobo: K; platformRevenueKobo: K; aiCostKobo: K; activeLearners: K; signups: K };
   series: { day: string; signups: number; paymentsKobo: number; payments: number; attempts: number; learners: number; avgScore: number | null; aiCostKobo: number; aiCalls: number; events: number }[];
   paymentsByPurpose: { purpose: string; count: number; amountKobo: number }[];
   topSchools: { id: string; name: string; status: string; students: number; paymentsKobo: number }[];
 };
 type Overview = { todo: { enquiries: number } };
+const PLAN_PRICE_KOBO = 150_000; // ₦1,500 for 30 days; set in backend/src/plan/plan.ts
 
 export default function OverwatchHome() {
   const [days, setDays] = useState(30);
@@ -35,7 +36,7 @@ export default function OverwatchHome() {
 
   return (
     <>
-      <PageHeader title="Overwatch" subtitle="Everything happening on Nexus." actions={<RangeTabs value={days} onChange={setDays} />} />
+      <PageHeader title="Overwatch" subtitle="Everything happening on BrainBox." actions={<RangeTabs value={days} onChange={setDays} />} />
 
       {tasks.length ? (
         <div className="mb-6 grid gap-3 md:grid-cols-3">
@@ -71,7 +72,7 @@ function Dashboard({ d }: { d: Analytics }) {
     <div className="flex flex-col gap-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Kpi label="Money collected" value={naira(d.kpis.paymentsKobo.value)} changePct={d.kpis.paymentsKobo.changePct} hint={vs} icon={<Banknote className="size-5" />} />
-        <Kpi label="Nexus revenue" tone="mint" value={naira(d.kpis.platformRevenueKobo.value)} changePct={d.kpis.platformRevenueKobo.changePct} hint="platform fees" icon={<Sparkles className="size-5" />} />
+        <Kpi label="BrainBox revenue" tone="mint" value={naira(d.kpis.platformRevenueKobo.value)} changePct={d.kpis.platformRevenueKobo.changePct} hint="fees and subscriptions" icon={<Sparkles className="size-5" />} />
         <Kpi label="Active learners" tone="sky" value={d.kpis.activeLearners.value.toLocaleString()} changePct={d.kpis.activeLearners.changePct} hint={`of ${t.students.toLocaleString()} students`} icon={<GraduationCap className="size-5" />} />
         <Kpi label="New accounts" tone="sun" value={d.kpis.signups.value.toLocaleString()} changePct={d.kpis.signups.changePct} hint={vs} icon={<UserPlus className="size-5" />} />
         <Kpi label="AI cost" tone="coral" value={naira(d.kpis.aiCostKobo.value)} changePct={d.kpis.aiCostKobo.changePct} goodWhenUp={false} hint={<Link href="/overwatch/ai" className="font-bold text-violet-700 hover:underline">details</Link>} icon={<Bot className="size-5" />} />
@@ -118,6 +119,25 @@ function Dashboard({ d }: { d: Analytics }) {
             <p className="text-sm text-ink-500">No schools yet.</p>
           )}
         </ChartCard>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        {[
+          { label: 'Paying parents', value: t.plans.paying, hint: `${naira(t.plans.paying * PLAN_PRICE_KOBO)} a month`, icon: WalletCards },
+          { label: 'On free trial', value: t.plans.trial, icon: Hourglass },
+          { label: 'Trial or plan ended', value: t.plans.ended, hint: 'not renewed', icon: CirclePause },
+        ].map((x) => (
+          <Card key={x.label} className="flex items-center gap-3">
+            <x.icon className="size-6 text-ink-300" aria-hidden />
+            <div className="min-w-0">
+              <div className="font-display text-2xl font-extrabold">{x.value.toLocaleString()}</div>
+              <div className="truncate text-sm font-semibold text-ink-500">
+                {x.label}
+                {x.hint ? <span className="font-normal"> · {x.hint}</span> : null}
+              </div>
+            </div>
+          </Card>
+        ))}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">

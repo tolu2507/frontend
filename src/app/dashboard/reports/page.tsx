@@ -27,7 +27,7 @@ export default function ReportsPage() {
 
   return (
     <>
-      <PageHeader title="Parent reports" subtitle="Every Friday at 4pm, Nexus writes each parent a short report from this week’s attendance, scores and teacher notes." />
+      <PageHeader title="Parent reports" subtitle="Every Friday at 4pm, BrainBox writes each parent a short report from this week’s attendance, scores and teacher notes." />
       {rows.length === 0 ? (
         <Empty icon={<Sparkles className="size-7" />} title="No students yet" message="Add students and their parents to start sending weekly reports." />
       ) : (

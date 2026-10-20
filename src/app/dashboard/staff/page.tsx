@@ -105,7 +105,7 @@ export default function StaffPage() {
           <p className="text-[15px]">
             {handover.app ? (
               <>
-                They install the Nexus app, tap <b>Sign in</b>, then <b>Got a code?</b>, enter <b>{handover.email}</b> and this code, then choose a password.
+                They install the BrainBox app, tap <b>Sign in</b>, then <b>Got a code?</b>, enter <b>{handover.email}</b> and this code, then choose a password.
               </>
             ) : (
               <>
@@ -136,7 +136,7 @@ function InviteForm({ owner, onClose, onHandover }: { owner: boolean; onClose: (
     onSuccess: (r, v) => {
       qc.invalidateQueries({ queryKey: [key] });
       onClose();
-      if (r.hasAccount) toast.success(`${v.firstName} already uses Nexus and can sign in now.`);
+      if (r.hasAccount) toast.success(`${v.firstName} already uses BrainBox and can sign in now.`);
       else if (r.inviteSent) toast.success(`Invite sent to ${v.email}`);
       else if (r.code) onHandover({ name: v.firstName, email: v.email.toLowerCase(), code: r.code, app: v.role === 'TUCK_SHOP' });
     },

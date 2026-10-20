@@ -63,7 +63,7 @@ export default function TuckShopPage() {
                 title="No sales this day"
                 message={
                   <>
-                    Add your tuck-shop staff on the <Link href="/dashboard/staff" className="font-bold text-violet-600 underline">Staff</Link> page. They sign in on the Nexus phone app and type each child’s tuck shop ID (it’s on the login slip and the student’s page).
+                    Add your tuck-shop staff on the <Link href="/dashboard/staff" className="font-bold text-violet-600 underline">Staff</Link> page. They sign in on the BrainBox phone app and type each child’s tuck shop ID (it’s on the login slip and the student’s page).
                   </>
                 }
               />
@@ -93,7 +93,7 @@ export default function TuckShopPage() {
             </div>
           )}
           <div className="mt-4">
-            <Notice tone="sky">Tuck-shop sales go into your school’s Nexus balance, alongside the fees parents pay in the app.</Notice>
+            <Notice tone="sky">Tuck-shop sales go into your school’s BrainBox balance, alongside the fees parents pay in the app.</Notice>
           </div>
         </>
       )}

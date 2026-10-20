@@ -29,7 +29,7 @@ export default function TransactionsPage() {
 
   return (
     <>
-      <PageHeader title="Transactions" subtitle="Every naira that moved on Nexus, and every payment attempt." actions={<RangeTabs value={days} onChange={setDays} />} />
+      <PageHeader title="Transactions" subtitle="Every naira that moved on BrainBox, and every payment attempt." actions={<RangeTabs value={days} onChange={setDays} />} />
 
       {flow.isPending ? (
         <Loading rows={3} />

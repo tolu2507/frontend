@@ -39,7 +39,7 @@ function SetPassword() {
     try {
       const session = await api<Session>('/auth/reset-password', { body: { identifier: v.identifier.toLowerCase(), code: v.code, password: v.password } });
       signIn(session);
-      toast.success('Password saved. Welcome to Nexus!');
+      toast.success('Password saved. Welcome to BrainBox!');
       router.replace(homeFor(session.user));
     } catch (e) {
       setError(e);

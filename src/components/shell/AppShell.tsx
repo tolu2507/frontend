@@ -94,7 +94,7 @@ export function AppShell({ nav, roles, label, children, accent = 'bg-violet-500'
       ) : (
         <div className="mx-1 rounded-xl bg-paper px-3 py-2">
           <div className="text-[11px] font-extrabold tracking-wide text-ink-300 uppercase">{label}</div>
-          <div className="truncate text-sm font-bold">{uniqueSchools[0]?.schoolName ?? 'Nexus HQ'}</div>
+          <div className="truncate text-sm font-bold">{uniqueSchools[0]?.schoolName ?? 'BrainBox HQ'}</div>
         </div>
       )}
 

@@ -173,7 +173,7 @@ function MonthBudget({ config: c }: { config: Usage['config'] }) {
   }
   const used = (spent / c.monthlyBudgetUsd) * 100;
   return (
-    <ChartCard title="AI budget this month" subtitle={used >= 100 ? 'Ceiling reached: AI is paused until the 1st, and reports use the plain summary.' : 'All AI across Nexus, reset on the 1st (Lagos time)'}>
+    <ChartCard title="AI budget this month" subtitle={used >= 100 ? 'Ceiling reached: AI is paused until the 1st, and reports use the plain summary.' : 'All AI across BrainBox, reset on the 1st (Lagos time)'}>
       <Meter value={Math.min(used, 100)} tone={used >= 100 ? 'coral' : used >= 80 ? 'sun' : 'mint'} />
       <p className="text-sm text-ink-700">
         <b>${spent.toFixed(2)}</b> of ${c.monthlyBudgetUsd.toFixed(2)} ({Math.round(used)}%)

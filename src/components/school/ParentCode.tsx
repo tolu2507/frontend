@@ -18,7 +18,7 @@ export function ParentCodeBox({ notice, parentName, childName, compact }: { noti
       <div className={cx('flex gap-2 rounded-xl bg-sky-100 text-sky-800', compact ? 'p-2 text-xs' : 'p-3 text-sm')}>
         <Hourglass className="mt-0.5 size-4 shrink-0" aria-hidden />
         <span>
-          <b>{who} already has a Nexus account.</b> They’ll see “Is {childName} your child?” in their app and must accept before they can see anything about {childName}.
+          <b>{who} already has a BrainBox account.</b> They’ll see “Is {childName} your child?” in their app and must accept before they can see anything about {childName}.
         </span>
       </div>
     );
@@ -54,7 +54,7 @@ export function ParentCodeBox({ notice, parentName, childName, compact }: { noti
         </button>
       </div>
       <p className={cx('mt-1 text-ink-700', compact ? 'text-[11px]' : 'text-[13px]')}>
-        In the Nexus app: <b>Sign in</b> → <b>Got a code from your school?</b> → enter <b>{notice.signInWith ?? 'their email or phone'}</b> and this code → choose a password. Valid for 7 days.
+        In the BrainBox app: <b>Sign in</b> → <b>Got a code from your school?</b> → enter <b>{notice.signInWith ?? 'their email or phone'}</b> and this code → choose a password. Valid for 7 days.
       </p>
     </div>
   );

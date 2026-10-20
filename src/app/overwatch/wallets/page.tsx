@@ -41,7 +41,7 @@ export default function WalletsPage() {
 
   return (
     <>
-      <PageHeader title="Wallets" subtitle="Every balance Nexus holds: children’s pocket money, school revenue and Nexus’s own revenue." />
+      <PageHeader title="Wallets" subtitle="Every balance BrainBox holds: children’s pocket money, school revenue and BrainBox’s own revenue." />
 
       {list.data ? (
         <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">

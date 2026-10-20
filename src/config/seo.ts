@@ -1,7 +1,7 @@
 import { brand } from './brand';
 
 /**
- * What search engines and link previews say about Nexus. The title leads with the exams parents search for;
+ * What search engines and link previews say about BrainBox. The title leads with the exams parents search for;
  * keep it under about 60 characters and the description under about 160, or Google cuts them off.
  */
 export const seo = {

@@ -28,7 +28,7 @@ async function refresh(): Promise<boolean> {
   }
 }
 
-/** Calls the Nexus API. Refreshes an expired session once, then replays. Errors become one readable sentence. */
+/** Calls the BrainBox API. Refreshes an expired session once, then replays. Errors become one readable sentence. */
 export async function api<T>(path: string, init: { method?: string; body?: unknown } = {}, retried = false): Promise<T> {
   const { accessToken, schoolId } = useAuth.getState();
   let res: Response;
@@ -43,7 +43,7 @@ export async function api<T>(path: string, init: { method?: string; body?: unkno
       body: init.body === undefined ? undefined : JSON.stringify(init.body),
     });
   } catch {
-    throw new ApiError(`We can't reach Nexus. Check your internet connection${process.env.NODE_ENV === 'development' ? ` (is the API running at ${brand.apiUrl}?)` : ''}.`, 0);
+    throw new ApiError(`We can't reach BrainBox. Check your internet connection${process.env.NODE_ENV === 'development' ? ` (is the API running at ${brand.apiUrl}?)` : ''}.`, 0);
   }
   if (res.status === 401 && !retried && !path.startsWith('/auth/')) {
     refreshing ??= refresh().finally(() => (refreshing = null));

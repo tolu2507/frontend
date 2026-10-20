@@ -195,7 +195,7 @@ function AddStudent({ classes, defaultClassId, onClose, onAdded }: { classes: Sc
         </div>
         <div role="group" className="grid gap-4 rounded-2xl bg-paper p-4 sm:grid-cols-2">
           <h3 className="text-sm font-extrabold sm:col-span-2">Parent or guardian</h3>
-          <p className="text-sm text-ink-500 sm:col-span-2">They get the Nexus app with weekly reports and fee payments. If they already have a Nexus account, they’ll be asked to accept the child in their app first.</p>
+          <p className="text-sm text-ink-500 sm:col-span-2">They get the BrainBox app with weekly reports and fee payments. If they already have a BrainBox account, they’ll be asked to accept the child in their app first.</p>
           <Input label="First name" error={e.pFirst?.message} {...register('pFirst')} />
           <Input label="Surname" {...register('pLast')} />
           <Input label="Email" type="email" error={e.pEmail?.message} {...register('pEmail')} />
@@ -293,12 +293,12 @@ function ImportStudents({ classes, onClose, onDone }: { classes: SchoolClass[]; 
           <ol className="flex list-decimal flex-col gap-2 pl-5 text-[15px] text-ink-700">
             <li>Download the template and fill it in Excel or Google Sheets, one student per row.</li>
             <li>
-              Use your class names exactly as on Nexus: <b>{classes.map((c) => c.name).join(', ')}</b>.
+              Use your class names exactly as on BrainBox: <b>{classes.map((c) => c.name).join(', ')}</b>.
             </li>
             <li>Save as CSV and upload it here. You’ll check everything before anything is saved.</li>
           </ol>
           <div className="flex flex-wrap gap-2">
-            <Button variant="secondary" icon={<FileSpreadsheet className="size-4" />} onClick={() => downloadCsv('Nexus student import template.csv', [HEADERS, ['Ada', 'Obi', classes[0]?.name ?? 'Primary 4', 'A1023', '2016-05-14', 'Ngozi', 'Obi', 'ngozi@example.com', '08031234567', 'Mother']])}>
+            <Button variant="secondary" icon={<FileSpreadsheet className="size-4" />} onClick={() => downloadCsv('BrainBox student import template.csv', [HEADERS, ['Ada', 'Obi', classes[0]?.name ?? 'Primary 4', 'A1023', '2016-05-14', 'Ngozi', 'Obi', 'ngozi@example.com', '08031234567', 'Mother']])}>
               Download template
             </Button>
           </div>
@@ -357,7 +357,7 @@ function LoginSlips({ logins, onClose }: { logins: Login[]; onClose: () => void 
       wide
       footer={
         <>
-          <Button variant="secondary" onClick={() => downloadCsv('Nexus student logins.csv', [['Student', 'Class', 'Username', 'PIN', 'Tuck shop ID', 'Parent', 'Parent signs in with', 'Parent app code'], ...logins.map((l) => [l.name, l.className, l.username, l.pin, l.shopCode, l.parentName ?? '', l.parent?.signInWith ?? '', l.parent?.code ?? (l.parent?.status === 'AWAITING_PARENT' ? 'Has an account: accepts in app' : l.parent?.sent ? 'Sent' : '')])])}>
+          <Button variant="secondary" onClick={() => downloadCsv('BrainBox student logins.csv', [['Student', 'Class', 'Username', 'PIN', 'Tuck shop ID', 'Parent', 'Parent signs in with', 'Parent app code'], ...logins.map((l) => [l.name, l.className, l.username, l.pin, l.shopCode, l.parentName ?? '', l.parent?.signInWith ?? '', l.parent?.code ?? (l.parent?.status === 'AWAITING_PARENT' ? 'Has an account: accepts in app' : l.parent?.sent ? 'Sent' : '')])])}>
             Download CSV
           </Button>
           <Button icon={<Printer className="size-4" />} onClick={() => window.print()}>
@@ -386,7 +386,7 @@ function LoginSlips({ logins, onClose }: { logins: Login[]; onClose: () => void 
                 <div className="font-mono text-base font-bold tracking-wider">{l.shopCode}</div>
               </div>
             </div>
-            <p className="mt-2 text-xs text-ink-500">Open the Nexus app → “I’m a student” → enter the username and PIN. At the tuck shop, give the tuck shop ID.</p>
+            <p className="mt-2 text-xs text-ink-500">Open the BrainBox app → “I’m a student” → enter the username and PIN. At the tuck shop, give the tuck shop ID.</p>
             {l.parent ? (
               <div className="mt-3">
                 <ParentCodeBox notice={l.parent} parentName={l.parentName} childName={l.name.split(' ')[0]} compact />

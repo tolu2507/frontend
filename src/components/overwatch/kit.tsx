@@ -188,7 +188,7 @@ export const LABELS: Record<string, string> = {
   STUDENT_SPEND: 'Student pocket money',
   TUTOR_EARNINGS: 'Tutor earnings',
   SCHOOL_REVENUE: 'School revenue',
-  PLATFORM_REVENUE: 'Nexus revenue',
+  PLATFORM_REVENUE: 'BrainBox revenue',
   ESCROW: 'Lesson escrow',
   TOPUP: 'Top-up',
   PURCHASE: 'Purchase',

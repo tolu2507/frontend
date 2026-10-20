@@ -21,7 +21,7 @@ const STATUS: Record<Status, { label: string; tone: Tone }> = {
   RETIRED: { label: 'Retired', tone: 'coral' },
 };
 const DIFFICULTY = ['', 'Very easy', 'Easy', 'Medium', 'Hard', 'Very hard'];
-const ORIGIN: Record<string, string> = { TEMPLATE: 'Template (answer worked out by code)', GENERATED: 'Written by AI, checked by AI', AUTHORED: 'Written by the Nexus team' };
+const ORIGIN: Record<string, string> = { TEMPLATE: 'Template (answer worked out by code)', GENERATED: 'Written by AI, checked by AI', AUTHORED: 'Written by the BrainBox team' };
 const PAGE = 20;
 
 type Counts = Record<Status, number>;
@@ -180,7 +180,7 @@ export default function QuestionBankPage() {
           />
         ) : null}
         <FilterSelect label="Status" value={f.status} onChange={set('status')} options={[{ value: '', label: 'Any status' }, ...(Object.keys(STATUS) as Status[]).map((s) => ({ value: s, label: STATUS[s].label }))]} />
-        <FilterSelect label="Source" value={f.origin} onChange={set('origin')} options={[{ value: '', label: 'Any source' }, { value: 'TEMPLATE', label: 'Templates' }, { value: 'GENERATED', label: 'AI written' }, { value: 'AUTHORED', label: 'Nexus team' }]} />
+        <FilterSelect label="Source" value={f.origin} onChange={set('origin')} options={[{ value: '', label: 'Any source' }, { value: 'TEMPLATE', label: 'Templates' }, { value: 'GENERATED', label: 'AI written' }, { value: 'AUTHORED', label: 'BrainBox team' }]} />
         <FilterSelect label="Difficulty" value={f.difficulty} onChange={set('difficulty')} options={[{ value: '', label: 'Any difficulty' }, ...[1, 2, 3, 4, 5].map((d) => ({ value: String(d), label: `${d} · ${DIFFICULTY[d]}` }))]} />
         <FilterSelect label="Reports" value={f.reported} onChange={set('reported')} options={[{ value: '', label: 'Reported or not' }, { value: 'true', label: 'Reported only' }]} />
         <SearchBox value={f.q} onChange={set('q')} placeholder="Search question text" />

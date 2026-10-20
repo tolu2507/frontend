@@ -1,4 +1,4 @@
-# Nexus web
+# BrainBox web
 
 Next.js 16 (App Router), Tailwind v4, TanStack Query, react-hook-form + zod. Talks to the API in `../backend`.
 

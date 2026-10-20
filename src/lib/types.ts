@@ -1,4 +1,4 @@
-/** Shapes returned by the Nexus API's /school routes. Money is kobo as a string. */
+/** Shapes returned by the BrainBox API's /school routes. Money is kobo as a string. */
 export type Level = 'NURSERY' | 'PRIMARY' | 'JUNIOR_SECONDARY' | 'SENIOR_SECONDARY';
 export type TermName = 'FIRST' | 'SECOND' | 'THIRD';
 export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED';

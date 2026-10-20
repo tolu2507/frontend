@@ -86,7 +86,7 @@ export default function OverwatchSchool() {
 
       <div className="my-6 grid gap-4 sm:grid-cols-3">
         <Stat label="Students" value={s.students} hint={`${s.classes} ${s.classes === 1 ? 'class' : 'classes'}`} />
-        <Stat label="Owed to school" tone="mint" value={naira(s.owedToSchoolKobo)} hint="Fees parents paid through Nexus, awaiting payout" />
+        <Stat label="Owed to school" tone="mint" value={naira(s.owedToSchoolKobo)} hint="Fees parents paid through BrainBox, awaiting payout" />
         <Stat label="Revenue share" tone="sun" value={active ? `${active.revenueShareBp / 100}%` : '—'} hint={active ? active.planName : 'No agreement yet'} />
       </div>
 
