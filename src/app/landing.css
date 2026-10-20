@@ -2039,3 +2039,247 @@ a.lp-store:active {
     justify-content: center;
   }
 }
+
+/* ── Guides ───────────────────────────────────────────── */
+
+.lp-guides {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.lp-guide-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 26px;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  border: 1px solid var(--ink-100);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease;
+}
+
+.lp-guide-card:hover {
+  transform: translateY(-3px);
+}
+
+.lp-guide-card h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.lp-guide-card p {
+  color: var(--ink-500);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.lp-guide-more {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--violet-700);
+}
+
+.lp-article-wrap {
+  max-width: 760px;
+}
+
+.lp-crumbs a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-500);
+  margin-bottom: 22px;
+}
+
+.lp-article h1 {
+  margin: 16px 0 18px;
+}
+
+.lp-article-meta {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--ink-300);
+  font-weight: 600;
+}
+
+.lp-article h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 44px 0 14px;
+}
+
+.lp-article p,
+.lp-article li {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink-700);
+}
+
+.lp-article p + p {
+  margin-top: 14px;
+}
+
+.lp-article ul,
+.lp-article ol {
+  display: grid;
+  gap: 10px;
+  padding-left: 24px;
+  margin: 8px 0;
+}
+
+.lp-article ul {
+  list-style: disc;
+}
+
+.lp-article ol {
+  list-style: decimal;
+}
+
+.lp-article li::marker {
+  color: var(--violet-500);
+  font-weight: 800;
+}
+
+.lp-article strong {
+  color: var(--ink);
+}
+
+.lp-article p a,
+.lp-article li a {
+  color: var(--violet-700);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lp-table {
+  overflow-x: auto;
+  margin: 18px 0;
+  border-radius: 18px;
+  border: 1px solid var(--ink-100);
+}
+
+.lp-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.lp-table th {
+  text-align: left;
+  background: var(--paper);
+  font-weight: 800;
+  padding: 12px 16px;
+}
+
+.lp-table td {
+  padding: 12px 16px;
+  border-top: 1px solid var(--ink-100);
+  color: var(--ink-700);
+}
+
+.lp-table tr:last-child td {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.lp-tip {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 24px 0;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--sun-50);
+  color: var(--sun-800);
+}
+
+.lp-tip svg {
+  flex: none;
+  margin-top: 4px;
+}
+
+.lp-tip p {
+  color: var(--ink-700);
+  font-size: 17px;
+}
+
+.lp-article-cta {
+  margin-top: 56px;
+  padding: 32px;
+  border-radius: 28px;
+  background: var(--violet-50);
+}
+
+.lp-article-cta h2 {
+  margin-top: 0;
+}
+
+.lp-article-cta .lp-get {
+  margin-bottom: 0;
+}
+
+.lp-related {
+  margin-top: 48px;
+  display: grid;
+  gap: 12px;
+}
+
+.lp-related h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.lp-related-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid var(--ink-100);
+  background: var(--white);
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.lp-related-card small {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--violet-700);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 760px) {
+  .lp-guides {
+    grid-template-columns: 1fr;
+  }
+  .lp-article h2 {
+    font-size: 24px;
+  }
+  .lp-article p,
+  .lp-article li {
+    font-size: 17px;
+  }
+  .lp-article-cta {
+    padding: 24px 18px;
+  }
+}

@@ -26,7 +26,7 @@ import {
 
 import { DemoForm } from '@/components/landing/DemoForm';
 import { GetApp } from '@/components/landing/GetApp';
-import { Logo } from '@/components/landing/Logo';
+import { Footer } from '@/components/landing/Footer';
 import { Nav } from '@/components/landing/Nav';
 import { RevealObserver } from '@/components/landing/RevealObserver';
 import { brand } from '@/config/brand';
@@ -706,34 +706,5 @@ function Schools() {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ── Footer ───────────────────────────────────────────── */
-
-function Footer() {
-  return (
-    <footer className="lp-footer">
-      <div className="lp-wrap">
-        <div className="lp-footer-inner">
-          <div>
-            <Logo />
-            <p>Exam prep, daily practice and weekly progress reports for Nigerian families.</p>
-          </div>
-          <nav className="lp-footer-links" aria-label="Footer">
-            <a href={APP}>Use {N} on the web</a>
-            <a href="#exam-prep">Exam prep</a>
-            <a href="#little-learners">Nursery and primary</a>
-            <a href="#reports">Weekly reports</a>
-            <a href="#faq">FAQ</a>
-            <a href="#schools">For schools</a>
-            <a href="/login">Log in</a>
-          </nav>
-        </div>
-        <div className="lp-footer-base">
-          © {new Date().getFullYear()} {N}. All rights reserved.
-        </div>
-      </div>
-    </footer>
   );
 }

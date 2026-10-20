@@ -8,12 +8,13 @@ import { brand } from '@/config/brand';
 
 import { Logo } from './Logo';
 
+// Full paths, so the menu also works from the guide pages.
 const links = [
-  { href: '#exam-prep', label: 'Exam prep' },
-  { href: '#little-learners', label: 'Nursery and primary' },
-  { href: '#reports', label: 'Weekly reports' },
-  { href: '#faq', label: 'FAQ' },
-  { href: '#schools', label: 'For schools' },
+  { href: '/#exam-prep', label: 'Exam prep' },
+  { href: '/#little-learners', label: 'Nursery and primary' },
+  { href: '/#reports', label: 'Weekly reports' },
+  { href: '/guides', label: 'Guides' },
+  { href: '/#schools', label: 'For schools' },
 ];
 
 export function Nav() {
@@ -35,18 +36,18 @@ export function Nav() {
         </Link>
         <nav className="lp-nav-links" aria-label="Main">
           {links.map((l) => (
-            <a key={l.href} href={l.href}>
+            <Link key={l.href} href={l.href}>
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="lp-nav-actions">
           <Link href="/login" className="lp-nav-login">
             Log in
           </Link>
-          <a href="#get-app" className="lp-btn sm">
+          <Link href="/#get-app" className="lp-btn sm">
             Get the app
-          </a>
+          </Link>
           <button
             type="button"
             className="lp-menu-btn"
@@ -61,9 +62,9 @@ export function Nav() {
       </div>
       <nav id="lp-mobile-menu" className={`lp-mobile-menu${open ? ' open' : ''}`} aria-label="Mobile">
         {links.map((l) => (
-          <a key={l.href} href={l.href} onClick={() => setOpen(false)}>
+          <Link key={l.href} href={l.href} onClick={() => setOpen(false)}>
             {l.label}
-          </a>
+          </Link>
         ))}
         <a href={brand.appUrl} onClick={() => setOpen(false)}>
           Use on the web
