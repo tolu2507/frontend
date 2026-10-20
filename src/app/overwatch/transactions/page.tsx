@@ -84,7 +84,7 @@ function LedgerTab() {
         <DateInput label="To" value={f.to} onChange={set('to')} />
         <div className="ml-auto">
           <ExportButton<Entry>
-            filename="nexus-ledger.csv"
+            filename="brainbox-ledger.csv"
             fetchPage={(p, size) => api<Ledger>(`/admin/transactions?${qs({ ...f, page: p, pageSize: size })}`)}
             columns={[['Time', (r) => dateTime(r.at)], ['Type', (r) => label(r.type)], ['Stream', (r) => label(r.stream)], ['Wallet', (r) => `${r.wallet.owner} (${label(r.wallet.type)})`], ['School', (r) => r.school], ['Amount (₦)', (r) => r.amountKobo / 100], ['Balance after (₦)', (r) => r.balanceAfterKobo / 100], ['Description', (r) => r.description], ['By', (r) => r.actor], ['Reference', (r) => r.reference]]}
           />
@@ -151,7 +151,7 @@ function PaymentsTab() {
         <SchoolFilter value={f.schoolId} onChange={set('schoolId')} />
         <div className="ml-auto">
           <ExportButton<Payment>
-            filename="nexus-payments.csv"
+            filename="brainbox-payments.csv"
             fetchPage={(p, size) => api<Payments>(`/admin/payments?${qs({ ...f, page: p, pageSize: size })}`)}
             columns={[['Created', (r) => dateTime(r.createdAt)], ['Paid', (r) => (r.paidAt ? dateTime(r.paidAt) : '')], ['Reference', (r) => r.reference], ['Provider ref', (r) => r.providerRef], ['Purpose', (r) => label(r.purpose)], ['Status', (r) => r.status], ['Amount (₦)', (r) => r.amountKobo / 100], ['Payer', (r) => r.payer], ['Contact', (r) => r.payerContact], ['School', (r) => r.school]]}
           />

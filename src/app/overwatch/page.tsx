@@ -14,14 +14,13 @@ import { naira } from '@/lib/format';
 type K = { value: number; previous: number; changePct: number | null };
 type Analytics = {
   days: number;
-  totals: { schools: Record<string, number>; students: number; parents: number; staff: number; plans: { paying: number; trial: number; ended: number } };
+  totals: { schools: Record<string, number>; students: number; parents: number; staff: number; plans: { paying: number; trial: number; ended: number; priceKobo: number } };
   kpis: { paymentsKobo: K; platformRevenueKobo: K; aiCostKobo: K; activeLearners: K; signups: K };
   series: { day: string; signups: number; paymentsKobo: number; payments: number; attempts: number; learners: number; avgScore: number | null; aiCostKobo: number; aiCalls: number; events: number }[];
   paymentsByPurpose: { purpose: string; count: number; amountKobo: number }[];
   topSchools: { id: string; name: string; status: string; students: number; paymentsKobo: number }[];
 };
 type Overview = { todo: { enquiries: number } };
-const PLAN_PRICE_KOBO = 150_000; // ₦1,500 for 30 days; set in backend/src/plan/plan.ts
 
 export default function OverwatchHome() {
   const [days, setDays] = useState(30);
@@ -123,7 +122,7 @@ function Dashboard({ d }: { d: Analytics }) {
 
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { label: 'Paying parents', value: t.plans.paying, hint: `${naira(t.plans.paying * PLAN_PRICE_KOBO)} a month`, icon: WalletCards },
+          { label: 'Paying parents', value: t.plans.paying, hint: `${naira(t.plans.paying * t.plans.priceKobo)} a month`, icon: WalletCards },
           { label: 'On free trial', value: t.plans.trial, icon: Hourglass },
           { label: 'Trial or plan ended', value: t.plans.ended, hint: 'not renewed', icon: CirclePause },
         ].map((x) => (

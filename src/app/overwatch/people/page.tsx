@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 
+import { DeleteAccountButton, ExportDataButton } from '@/components/overwatch/DeleteAccount';
 import { ago, ExportButton, Filters, FilterSelect, label, Pager, qs, SchoolFilter, SearchBox, type Paged } from '@/components/overwatch/kit';
 import { Badge, Empty, ErrorBox, Loading, PageHeader, Table, Tabs } from '@/components/ui';
 import { api } from '@/lib/api';
@@ -13,7 +14,7 @@ import { date, naira } from '@/lib/format';
 
 type Kind = 'STUDENT' | 'PARENT' | 'STAFF';
 type School = { id: string; name: string } | null;
-type Student = { id: string; name: string; username: string | null; school: School; className: string | null; level: string; xp: number; streak: number; lastActive: string | null; quests: number; parents: number; walletKobo: number; walletFrozen: boolean; joined: string };
+type Student = { id: string; userId: string; name: string; username: string | null; school: School; className: string | null; level: string; xp: number; streak: number; lastActive: string | null; quests: number; parents: number; walletKobo: number; walletFrozen: boolean; joined: string };
 type Parent = { id: string; name: string; email: string | null; phone: string | null; children: { id: string; name: string; school: string | null; relationship: string }[]; payments: number; lastLoginAt: string | null; joined: string };
 type Staff = { id: string; name: string; email: string | null; phone: string | null; role: string; status: string; school: School; subjectsTaught: number; formClasses: number; notesWritten: number; invited: boolean; lastLoginAt: string | null; joined: string };
 
@@ -71,11 +72,11 @@ function People() {
         ) : null}
         <div className="ml-auto">
           {kind === 'STUDENT' ? (
-            <ExportButton<Student> filename="nexus-students.csv" fetchPage={fetchAll} columns={[['Name', (r) => r.name], ['Username', (r) => r.username], ['School', (r) => r.school?.name], ['Class', (r) => r.className], ['XP', (r) => r.xp], ['Streak', (r) => r.streak], ['Quests', (r) => r.quests], ['Wallet (₦)', (r) => r.walletKobo / 100], ['Joined', (r) => date(r.joined)]]} />
+            <ExportButton<Student> filename="brainbox-students.csv" fetchPage={fetchAll} columns={[['Name', (r) => r.name], ['Username', (r) => r.username], ['School', (r) => r.school?.name], ['Class', (r) => r.className], ['XP', (r) => r.xp], ['Streak', (r) => r.streak], ['Quests', (r) => r.quests], ['Wallet (₦)', (r) => r.walletKobo / 100], ['Joined', (r) => date(r.joined)]]} />
           ) : kind === 'PARENT' ? (
-            <ExportButton<Parent> filename="nexus-parents.csv" fetchPage={fetchAll} columns={[['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Children', (r) => r.children.map((c) => `${c.name} (${c.school ?? 'no school'})`).join('; ')], ['Payments', (r) => r.payments], ['Joined', (r) => date(r.joined)]]} />
+            <ExportButton<Parent> filename="brainbox-parents.csv" fetchPage={fetchAll} columns={[['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Children', (r) => r.children.map((c) => `${c.name} (${c.school ?? 'no school'})`).join('; ')], ['Payments', (r) => r.payments], ['Joined', (r) => date(r.joined)]]} />
           ) : (
-            <ExportButton<Staff> filename="nexus-staff.csv" fetchPage={fetchAll} columns={[['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Role', (r) => label(r.role)], ['School', (r) => r.school?.name], ['Subjects taught', (r) => r.subjectsTaught], ['Signed in', (r) => (r.invited ? 'Invite pending' : r.lastLoginAt ? date(r.lastLoginAt) : 'Never')]]} />
+            <ExportButton<Staff> filename="brainbox-staff.csv" fetchPage={fetchAll} columns={[['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['Role', (r) => label(r.role)], ['School', (r) => r.school?.name], ['Subjects taught', (r) => r.subjectsTaught], ['Signed in', (r) => (r.invited ? 'Invite pending' : r.lastLoginAt ? date(r.lastLoginAt) : 'Never')]]} />
           )}
         </div>
       </Filters>
@@ -107,7 +108,7 @@ const SchoolLink = ({ s }: { s: School }) =>
 
 function Students({ rows }: { rows: Student[] }) {
   return (
-    <Table head={['Student', 'School', 'Class', 'XP', 'Streak', 'Quests', 'Wallet', 'Last active']}>
+    <Table head={['Student', 'School', 'Class', 'XP', 'Streak', 'Quests', 'Wallet', 'Last active', '']}>
       {rows.map((s) => (
         <tr key={s.id} className="hover:bg-paper">
           <td className="px-4 py-3">
@@ -127,6 +128,9 @@ function Students({ rows }: { rows: Student[] }) {
             <span className="font-semibold">{naira(s.walletKobo)}</span> {s.walletFrozen ? <Badge tone="coral">frozen</Badge> : null}
           </td>
           <td className="px-4 py-3 text-ink-500">{s.lastActive ? date(s.lastActive, { day: 'numeric', month: 'short' }) : 'Never'}</td>
+          <td className="px-4 py-3 text-right">
+            <DeleteAccountButton userId={s.userId} />
+          </td>
         </tr>
       ))}
     </Table>
@@ -135,7 +139,7 @@ function Students({ rows }: { rows: Student[] }) {
 
 function Parents({ rows }: { rows: Parent[] }) {
   return (
-    <Table head={['Parent', 'Contact', 'Children', 'Payments', 'Last sign-in']}>
+    <Table head={['Parent', 'Contact', 'Children', 'Payments', 'Last sign-in', '']}>
       {rows.map((p) => (
         <tr key={p.id} className="align-top hover:bg-paper">
           <td className="px-4 py-3">
@@ -161,6 +165,12 @@ function Parents({ rows }: { rows: Parent[] }) {
           </td>
           <td className="px-4 py-3">{p.payments}</td>
           <td className="px-4 py-3 text-ink-500">{ago(p.lastLoginAt)}</td>
+          <td className="px-4 py-3">
+            <div className="flex justify-end gap-2">
+              <ExportDataButton userId={p.id} name={p.name} />
+              <DeleteAccountButton userId={p.id} />
+            </div>
+          </td>
         </tr>
       ))}
     </Table>

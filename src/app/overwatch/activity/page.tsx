@@ -123,7 +123,7 @@ function ActivityLog() {
         <SchoolFilter value={schoolId} onChange={(v) => (setSchoolId(v), setPage(1))} extra={[{ value: 'none', label: 'Platform-wide only' }]} />
         <div className="ml-auto">
           <ExportButton<Row>
-            filename="nexus-activity.csv"
+            filename="brainbox-activity.csv"
             fetchPage={(p, size) => api<Paged<Row>>(`/admin/activity?${qs({ ...filter, page: p, pageSize: size })}`)}
             columns={[['Time', (r) => dateTime(r.at)], ['Who', (r) => r.actor?.name], ['Role', (r) => label(r.actor?.role)], ['School', (r) => r.school?.name], ['Action', (r) => describe(r.action)], ['Result', (r) => r.meta?.status ?? ''], ['IP', (r) => r.ip]]}
           />

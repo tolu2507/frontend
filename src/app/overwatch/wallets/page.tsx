@@ -66,7 +66,7 @@ export default function WalletsPage() {
         <FilterSelect label="State" value={frozen} onChange={(v) => (setFrozen(v), setPage(1))} options={[{ value: '', label: 'Active & frozen' }, { value: 'true', label: 'Frozen only' }, { value: 'false', label: 'Active only' }]} />
         <div className="ml-auto">
           <ExportButton<Row>
-            filename="nexus-wallets.csv"
+            filename="brainbox-wallets.csv"
             fetchPage={(p, size) => api<List>(`/admin/wallets?${qs({ ...filter, page: p, pageSize: size })}`)}
             columns={[['Owner', (r) => r.owner], ['Contact', (r) => r.contact], ['Type', (r) => label(r.type)], ['School', (r) => r.school], ['Balance (₦)', (r) => r.balanceKobo / 100], ['Frozen', (r) => (r.isFrozen ? 'yes' : 'no')], ['Transactions', (r) => r.entries]]}
           />
