@@ -25,7 +25,7 @@ type Setting = {
   updatedBy: string | null;
 };
 
-const GROUPS = ['Plan', 'Free plan', 'Coins', 'Sticker coins', 'Rewards'];
+const GROUPS = ['Plan', 'Free plan', 'Coins', 'Sticker coins', 'Rewards', 'Daily Olympiad'];
 
 /** Prices, trial, free plan, coins and rewards: change them here, no deploy needed. Applies within 30 seconds. */
 export default function SettingsPage() {

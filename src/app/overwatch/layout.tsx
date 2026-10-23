@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity, ArrowLeftRight, Bot, Building2, FileQuestion, Gift, Inbox, LayoutDashboard, LibraryBig, LifeBuoy, Settings, ShieldCheck, Trophy, Users, Wallet } from 'lucide-react';
+import { Activity, ArrowLeftRight, Bot, Building2, FileQuestion, Gift, Inbox, LayoutDashboard, LibraryBig, LifeBuoy, Settings, ShieldCheck, Swords, Trophy, Users, Wallet } from 'lucide-react';
 
 import { AppShell, type NavItem } from '@/components/shell/AppShell';
 
@@ -13,6 +13,7 @@ const nav: NavItem[] = [
   { href: '/overwatch/learning', label: 'Learning', icon: LibraryBig },
   { href: '/overwatch/questions', label: 'Question bank', icon: FileQuestion },
   { href: '/overwatch/rankings', label: 'Rankings', icon: Trophy },
+  { href: '/overwatch/arena', label: 'Arena', icon: Swords },
   { href: '/overwatch/support', label: 'Support', icon: LifeBuoy },
   { href: '/overwatch/ai', label: 'AI & curriculum', icon: Bot },
   { href: '/overwatch/wallets', label: 'Wallets', icon: Wallet },
